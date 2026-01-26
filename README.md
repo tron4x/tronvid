@@ -1,7 +1,7 @@
 # 🎬 TronVid
 
 <p align="center">
-  <img src="tron.jpeg" alt="TronVid Logo" width="128" height="128">
+  <img src="assets/logo.png" alt="TronVid Logo" width="128" height="128">
 </p>
 
 <p align="center">
@@ -141,16 +141,25 @@ Built applications will be in the `dist/` directory.
 
 ```
 tronvid/
-├── main.js           # Electron main process
-├── renderer.js       # Renderer process (UI logic)
-├── index.html        # Main HTML file
-├── styles.css        # Application styles
-├── package.json      # Project configuration
-├── build/            # Build resources
-│   ├── icon.icns     # macOS icon
-│   ├── icon.ico      # Windows icon
-│   └── icon.png      # Linux icon
-└── dist/             # Built applications
+├── src/                    # Source code
+│   ├── main.js             # Electron main process
+│   ├── renderer.js         # Renderer process (UI logic)
+│   ├── index.html          # Main HTML file
+│   └── styles.css          # Application styles
+├── assets/                 # Static assets
+│   └── logo.png            # Application logo
+├── build/                  # Build resources
+│   ├── icon.icns           # macOS icon
+│   ├── icon.ico            # Windows icon
+│   └── icon.png            # Linux icon
+├── docs/                   # Documentation
+├── package.json            # Project configuration
+├── LICENSE                 # MIT License
+├── README.md               # This file
+├── CONTRIBUTING.md         # Contributing guidelines
+├── CODE_OF_CONDUCT.md      # Code of conduct
+├── CHANGELOG.md            # Version history
+└── dist/                   # Built applications (generated)
 ```
 
 ## 🤝 Contributing

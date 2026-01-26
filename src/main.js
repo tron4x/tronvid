@@ -177,7 +177,7 @@ function createWindow() {
   const isWindows = process.platform === 'win32';
   
   // Set app icon
-  const iconPath = path.join(__dirname, 'build', 'icon.png');
+  const iconPath = path.join(__dirname, '..', 'build', 'icon.png');
   
   mainWindow = new BrowserWindow({
     width: 1200,
@@ -201,7 +201,7 @@ function createWindow() {
     }
   });
 
-  mainWindow.loadFile('index.html');
+  mainWindow.loadFile(path.join(__dirname, 'index.html'));
   
   // Open DevTools in development
   // mainWindow.webContents.openDevTools();

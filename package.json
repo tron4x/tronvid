@@ -1,8 +1,8 @@
 {
   "name": "tronvid",
   "version": "1.0.0",
-  "description": "A modern video player with playlist support",
-  "main": "main.js",
+  "description": "A modern, cross-platform video player with playlist support",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
@@ -11,12 +11,36 @@
     "build:linux": "electron-builder --linux",
     "build:all": "electron-builder --mac --win --linux"
   },
-  "keywords": ["video", "player", "electron", "mp4", "mov", "cross-platform"],
-  "author": "tron4x",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tron4x/tronvid.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tron4x/tronvid/issues"
+  },
+  "homepage": "https://github.com/tron4x/tronvid#readme",
+  "keywords": [
+    "video",
+    "player",
+    "electron",
+    "mp4",
+    "mov",
+    "mkv",
+    "cross-platform",
+    "playlist",
+    "media"
+  ],
+  "author": {
+    "name": "tron4x",
+    "url": "https://github.com/tron4x"
+  },
   "license": "MIT",
   "devDependencies": {
     "electron": "^28.0.0",
     "electron-builder": "^24.9.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "build": {
     "appId": "com.tron4x.tronvid",
@@ -46,11 +70,8 @@
       "uninstallerIcon": "build/icon.ico"
     },
     "files": [
-      "main.js",
-      "index.html",
-      "renderer.js",
-      "styles.css",
-      "tron.jpeg",
+      "src/**/*",
+      "assets/**/*",
       "build/**/*"
     ],
     "directories": {
