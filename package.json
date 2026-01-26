@@ -1,0 +1,61 @@
+{
+  "name": "tronvid",
+  "version": "1.0.0",
+  "description": "A modern video player with playlist support",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
+    "build:all": "electron-builder --mac --win --linux"
+  },
+  "keywords": ["video", "player", "electron", "mp4", "mov", "cross-platform"],
+  "author": "tron4x",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.tron4x.tronvid",
+    "productName": "TronVid",
+    "mac": {
+      "category": "public.app-category.video",
+      "target": ["dmg", "zip"],
+      "icon": "build/icon.icns",
+      "extendInfo": {
+        "CFBundleName": "TronVid",
+        "CFBundleDisplayName": "TronVid"
+      }
+    },
+    "win": {
+      "target": ["nsis", "portable"],
+      "icon": "build/icon.ico"
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "icon": "build/icon.png",
+      "category": "Video"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    },
+    "files": [
+      "main.js",
+      "index.html",
+      "renderer.js",
+      "styles.css",
+      "tron.jpeg",
+      "build/**/*"
+    ],
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    }
+  }
+}
