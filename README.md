@@ -21,7 +21,7 @@
 <p align="center">
   <a href="https://github.com/tron4x/tronvid/releases"><img src="https://img.shields.io/badge/version-1.6.4-orange" alt="Version"></a>
   <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" alt="License"></a>
   <img src="https://img.shields.io/badge/electron-28.0.0-9feaf9" alt="Electron">
   <img src="https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen" alt="Node">
   <a href="https://github.com/tron4x/tronvid/issues"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs Welcome"></a>
@@ -156,7 +156,7 @@ tronvid/
 │   └── icon.png            # Linux icon
 ├── docs/                   # Documentation
 ├── package.json            # Project configuration
-├── LICENSE                 # MIT License
+├── LICENSE                 # Apache 2.0 License
 ├── README.md               # This file
 ├── CONTRIBUTING.md         # Contributing guidelines
 ├── CODE_OF_CONDUCT.md      # Code of conduct
@@ -176,7 +176,7 @@ Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md)
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
 ## 👨‍💻 Author
 

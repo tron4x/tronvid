@@ -34,7 +34,7 @@
     "name": "tron4x",
     "url": "https://github.com/tron4x"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "devDependencies": {
     "electron": "^28.0.0",
     "electron-builder": "^24.9.1"
