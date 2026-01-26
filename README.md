@@ -22,7 +22,7 @@
   <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
   <img src="https://img.shields.io/badge/electron-28.0.0-blue" alt="Electron">
-  <img src="https://img.shields.io/badge/version-1.0.0-orange" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.6.4-orange" alt="Version">
 </p>
 
 ---

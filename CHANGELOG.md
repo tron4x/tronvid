@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.4] - 2026-01-26
+
+### Changed
+- Reorganized project structure for professional layout
+- Moved source files to `src/` directory
+- Moved assets to `assets/` directory
+- Updated all internal references
+
+### Added
+- Professional GitHub repository files (CONTRIBUTING.md, CODE_OF_CONDUCT.md)
+
 ## [1.0.0] - 2026-01-26
 
 ### Added
@@ -52,5 +63,6 @@ We use [Semantic Versioning](https://semver.org/):
 2. Install the new version (your playlists will be preserved)
 3. Enjoy the new features!
 
-[Unreleased]: https://github.com/tron4x/tronvid/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/tron4x/tronvid/compare/v1.6.4...HEAD
+[1.6.4]: https://github.com/tron4x/tronvid/compare/v1.0.0...v1.6.4
 [1.0.0]: https://github.com/tron4x/tronvid/releases/tag/v1.0.0

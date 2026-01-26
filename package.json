@@ -1,6 +1,6 @@
 {
   "name": "tronvid",
-  "version": "1.0.0",
+  "version": "1.6.4",
   "description": "A modern, cross-platform video player with playlist support",
   "main": "src/main.js",
   "scripts": {
