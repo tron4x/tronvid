@@ -176,8 +176,21 @@ function createWindow() {
   const isMac = process.platform === 'darwin';
   const isWindows = process.platform === 'win32';
   
-  // Set app icon
-  const iconPath = path.join(__dirname, '..', 'build', 'icon.png');
+  // Set app icon - use appropriate format per platform
+  let iconPath;
+  if (isMac) {
+    // On macOS, also set the dock icon
+    iconPath = path.join(__dirname, '..', 'assets', 'logo.png');
+    const { nativeImage } = require('electron');
+    const dockIcon = nativeImage.createFromPath(iconPath);
+    if (app.dock) {
+      app.dock.setIcon(dockIcon);
+    }
+  } else if (isWindows) {
+    iconPath = path.join(__dirname, '..', 'build', 'icon.ico');
+  } else {
+    iconPath = path.join(__dirname, '..', 'build', 'icon.png');
+  }
   
   mainWindow = new BrowserWindow({
     width: 1200,
@@ -323,6 +336,37 @@ ipcMain.handle('update-playlists', (event, playlists) => {
 });
 
 // Screenshot handler - save to Pictures folder
+// Mini Player Mode
+let normalBounds = null;
+
+ipcMain.on('set-mini-player', (event, enabled) => {
+  if (!mainWindow) return;
+  
+  if (enabled) {
+    // Save current bounds
+    normalBounds = mainWindow.getBounds();
+    
+    // Set mini player size and always on top
+    mainWindow.setAlwaysOnTop(true, 'floating');
+    mainWindow.setMinimumSize(400, 300);
+    mainWindow.setSize(800, 600);
+    
+    // Center on screen
+    mainWindow.center();
+  } else {
+    // Restore normal mode
+    mainWindow.setAlwaysOnTop(false);
+    mainWindow.setMinimumSize(800, 600);
+    
+    if (normalBounds) {
+      mainWindow.setBounds(normalBounds);
+    } else {
+      mainWindow.setSize(1200, 800);
+      mainWindow.center();
+    }
+  }
+});
+
 ipcMain.handle('save-screenshot', async (event, { dataUrl, filename }) => {
   try {
     // Get Pictures folder path

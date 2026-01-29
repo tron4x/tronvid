@@ -1,6 +1,13 @@
-const { ipcRenderer, shell } = require('electron');
+const { ipcRenderer, shell, webUtils } = require('electron');
 const fs = require('fs');
 const path = require('path');
+
+// Import Modules
+const helpModalModule = require('./modules/helpModal');
+const aboutModalModule = require('./modules/aboutModal');
+const themesModule = require('./modules/themes');
+const videoStatsModule = require('./modules/videoStats');
+const abLoopModule = require('./modules/abLoop');
 
 // Platform detection
 const platform = process.platform;
@@ -57,12 +64,34 @@ let isLooping = false;
 let isShuffling = false;
 let playHistory = [];
 
+// A-B Loop State
+let abLoopEnabled = false;
+let abLoopPointA = null;
+let abLoopPointB = null;
+
+// Theme State
+let currentTheme = 'dark';
+const themes = ['dark', 'light', 'purple', 'blue', 'green'];
+
+// Mini Player State
+let isMiniPlayer = false;
+
+// Video Stats State
+let showVideoStats = false;
+
+// A-B Loop DOM Elements
+const abLoopBtn = document.getElementById('abLoopBtn');
+const abLoopIndicator = document.getElementById('abLoopIndicator');
+const abLoopDisplay = document.getElementById('abLoopDisplay');
+
 // Initialize
 function init() {
   setupEventListeners();
   setupDragAndDrop();
   setupNewControls();
+  setupABLoopControls();
   setupSidebarToggle();
+  setupUIButtons();
   updatePlayButton(false);
   updateMuteButton();
   showDropZone();
@@ -70,6 +99,23 @@ function init() {
   // Set initial volume
   volumeSlider.value = 75;
   videoPlayer.volume = 0.75;
+}
+
+// Setup UI Buttons (Stats, Theme, Mini Player)
+function setupUIButtons() {
+  const statsBtn = document.getElementById('statsBtn');
+  const themeBtn = document.getElementById('themeBtn');
+  const miniPlayerBtn = document.getElementById('miniPlayerBtn');
+  
+  if (statsBtn) {
+    statsBtn.addEventListener('click', toggleVideoStats);
+  }
+  
+  // Theme button is handled by themesModule.init()
+  
+  if (miniPlayerBtn) {
+    miniPlayerBtn.addEventListener('click', toggleMiniPlayer);
+  }
 }
 
 // Sidebar Toggle
@@ -243,7 +289,8 @@ function handleDrop(e) {
     const ext = '.' + file.name.split('.').pop().toLowerCase();
     return videoExtensions.includes(ext);
   }).map(file => ({
-    path: file.path,
+    // Use webUtils.getPathForFile for newer Electron versions
+    path: webUtils.getPathForFile(file),
     name: file.name,
     size: file.size,
     thumbnail: null
@@ -576,6 +623,9 @@ function updateProgress() {
     progressBar.value = progress;
     progressBar.style.setProperty('--progress', `${progress}%`);
     currentTimeEl.textContent = formatTime(videoPlayer.currentTime);
+    
+    // Check A-B Loop
+    checkABLoop();
   }
 }
 
@@ -694,6 +744,27 @@ function handleKeyboard(e) {
         toggleSidebar();
       }
       break;
+    // A-B Loop shortcuts
+    case 'BracketLeft': // [ key - Set point A
+      e.preventDefault();
+      setLoopPointA();
+      break;
+    case 'BracketRight': // ] key - Set point B
+      e.preventDefault();
+      setLoopPointB();
+      break;
+    case 'Backslash': // \ key - Clear A-B loop
+      e.preventDefault();
+      clearABLoop();
+      break;
+    case 'KeyL':
+      // L toggles A-B loop (if points are set)
+      if (abLoopPointA !== null && abLoopPointB !== null) {
+        e.preventDefault();
+        abLoopEnabled = !abLoopEnabled;
+        updateABLoopUI();
+      }
+      break;
   }
 }
 
@@ -784,6 +855,211 @@ function toggleShuffle() {
   
   if (shuffleBtn) {
     shuffleBtn.classList.toggle('active', isShuffling);
+  }
+}
+
+// ============================================
+// A-B LOOP FUNCTIONALITY
+// ============================================
+
+// Set A-B Loop point A (start)
+function setLoopPointA() {
+  if (!videoPlayer.src || !videoPlayer.duration) return;
+  
+  abLoopPointA = videoPlayer.currentTime;
+  
+  // If B is set and A is after B, swap them
+  if (abLoopPointB !== null && abLoopPointA >= abLoopPointB) {
+    abLoopPointB = null;
+  }
+  
+  updateABLoopUI();
+  showABLoopFeedback('A');
+}
+
+// Set A-B Loop point B (end)
+function setLoopPointB() {
+  if (!videoPlayer.src || !videoPlayer.duration) return;
+  
+  abLoopPointB = videoPlayer.currentTime;
+  
+  // If A is not set, set it to 0
+  if (abLoopPointA === null) {
+    abLoopPointA = 0;
+  }
+  
+  // If B is before A, swap them
+  if (abLoopPointB <= abLoopPointA) {
+    const temp = abLoopPointA;
+    abLoopPointA = abLoopPointB;
+    abLoopPointB = temp;
+  }
+  
+  // Enable A-B loop when both points are set
+  abLoopEnabled = true;
+  
+  updateABLoopUI();
+  showABLoopFeedback('B');
+}
+
+// Toggle A-B Loop on/off
+function toggleABLoop() {
+  if (abLoopPointA !== null && abLoopPointB !== null) {
+    abLoopEnabled = !abLoopEnabled;
+  } else if (abLoopPointA === null) {
+    // First click sets A
+    setLoopPointA();
+    return;
+  } else if (abLoopPointB === null) {
+    // Second click sets B
+    setLoopPointB();
+    return;
+  }
+  
+  updateABLoopUI();
+}
+
+// Clear A-B Loop points
+function clearABLoop() {
+  abLoopEnabled = false;
+  abLoopPointA = null;
+  abLoopPointB = null;
+  updateABLoopUI();
+}
+
+// Update A-B Loop UI
+function updateABLoopUI() {
+  // Update button state
+  if (abLoopBtn) {
+    abLoopBtn.classList.toggle('active', abLoopEnabled);
+    abLoopBtn.classList.toggle('has-points', abLoopPointA !== null || abLoopPointB !== null);
+  }
+  
+  // Update indicator
+  if (abLoopIndicator) {
+    abLoopIndicator.style.display = (abLoopPointA !== null || abLoopPointB !== null) ? 'block' : 'none';
+  }
+  
+  // Update display text
+  if (abLoopDisplay) {
+    if (abLoopPointA !== null && abLoopPointB !== null) {
+      abLoopDisplay.textContent = `${formatTime(abLoopPointA)} - ${formatTime(abLoopPointB)}`;
+      abLoopDisplay.style.display = 'block';
+    } else if (abLoopPointA !== null) {
+      abLoopDisplay.textContent = `A: ${formatTime(abLoopPointA)}`;
+      abLoopDisplay.style.display = 'block';
+    } else {
+      abLoopDisplay.style.display = 'none';
+    }
+  }
+  
+  // Update progress bar markers
+  updateABLoopMarkers();
+}
+
+// Update A-B Loop markers on progress bar
+function updateABLoopMarkers() {
+  // Remove existing markers
+  const existingMarkers = document.querySelectorAll('.ab-loop-marker');
+  existingMarkers.forEach(m => m.remove());
+  
+  const existingRegion = document.querySelector('.ab-loop-region');
+  if (existingRegion) existingRegion.remove();
+  
+  if (!videoPlayer.duration) return;
+  
+  const progressContainer = progressBar.parentElement;
+  if (!progressContainer) return;
+  
+  // Add A marker
+  if (abLoopPointA !== null) {
+    const markerA = document.createElement('div');
+    markerA.className = 'ab-loop-marker marker-a';
+    markerA.style.left = `${(abLoopPointA / videoPlayer.duration) * 100}%`;
+    markerA.title = `A: ${formatTime(abLoopPointA)}`;
+    progressContainer.appendChild(markerA);
+  }
+  
+  // Add B marker
+  if (abLoopPointB !== null) {
+    const markerB = document.createElement('div');
+    markerB.className = 'ab-loop-marker marker-b';
+    markerB.style.left = `${(abLoopPointB / videoPlayer.duration) * 100}%`;
+    markerB.title = `B: ${formatTime(abLoopPointB)}`;
+    progressContainer.appendChild(markerB);
+  }
+  
+  // Add loop region highlight
+  if (abLoopPointA !== null && abLoopPointB !== null) {
+    const region = document.createElement('div');
+    region.className = 'ab-loop-region';
+    const startPercent = (abLoopPointA / videoPlayer.duration) * 100;
+    const endPercent = (abLoopPointB / videoPlayer.duration) * 100;
+    region.style.left = `${startPercent}%`;
+    region.style.width = `${endPercent - startPercent}%`;
+    progressContainer.appendChild(region);
+  }
+}
+
+// Check A-B Loop during playback
+function checkABLoop() {
+  if (!abLoopEnabled || abLoopPointA === null || abLoopPointB === null) return;
+  
+  if (videoPlayer.currentTime >= abLoopPointB) {
+    videoPlayer.currentTime = abLoopPointA;
+  }
+}
+
+// Visual feedback for A-B Loop point
+function showABLoopFeedback(point) {
+  const container = document.querySelector('.video-container');
+  const feedback = document.createElement('div');
+  feedback.className = 'ab-loop-feedback';
+  feedback.textContent = point;
+  feedback.style.cssText = `
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    font-weight: bold;
+    color: ${point === 'A' ? '#00d4ff' : '#ff6b35'};
+    text-shadow: 0 0 20px ${point === 'A' ? '#00d4ff' : '#ff6b35'};
+    pointer-events: none;
+    z-index: 1000;
+    animation: abFeedback 0.5s ease-out forwards;
+  `;
+  
+  container.appendChild(feedback);
+  
+  setTimeout(() => feedback.remove(), 500);
+}
+
+// Setup A-B Loop controls
+let abLoopClickTimer = null;
+let abLoopClickCount = 0;
+
+function setupABLoopControls() {
+  if (abLoopBtn) {
+    abLoopBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      abLoopClickCount++;
+      
+      if (abLoopClickCount === 1) {
+        // Wait to see if it's a double click
+        abLoopClickTimer = setTimeout(() => {
+          // Single click - toggle or set points
+          toggleABLoop();
+          abLoopClickCount = 0;
+        }, 250);
+      } else if (abLoopClickCount === 2) {
+        // Double click - clear A-B loop
+        clearTimeout(abLoopClickTimer);
+        abLoopClickCount = 0;
+        clearABLoop();
+        showABLoopFeedback('✕');
+      }
+    });
   }
 }
 
@@ -1061,38 +1337,13 @@ const aboutModal = document.getElementById('aboutModal');
 const closeAbout = document.getElementById('closeAbout');
 const modalOverlay = aboutModal ? aboutModal.querySelector('.modal-overlay') : null;
 
-function setupAboutModal() {
-  if (aboutBtn && aboutModal) {
-    aboutBtn.addEventListener('click', openAboutModal);
-  }
-  
-  if (closeAbout) {
-    closeAbout.addEventListener('click', closeAboutModal);
-  }
-  
-  if (modalOverlay) {
-    modalOverlay.addEventListener('click', closeAboutModal);
-  }
-  
-  // Close on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && aboutModal && aboutModal.classList.contains('show')) {
-      closeAboutModal();
-    }
-  });
-}
+// Help Modal
+const helpBtn = document.getElementById('helpBtn');
+const helpModal = document.getElementById('helpModal');
+const closeHelp = document.getElementById('closeHelp');
+const helpModalOverlay = helpModal ? helpModal.querySelector('.modal-overlay') : null;
 
-function openAboutModal() {
-  if (aboutModal) {
-    aboutModal.classList.add('show');
-  }
-}
-
-function closeAboutModal() {
-  if (aboutModal) {
-    aboutModal.classList.remove('show');
-  }
-}
+// About Modal and Help Modal are now handled by modules
 
 // ============================================
 // SAVED PLAYLISTS MANAGEMENT
@@ -1327,7 +1578,7 @@ function closePlaylistModalFn() {
 
 // IPC Listeners for Menu Events
 ipcRenderer.on('show-about', () => {
-  openAboutModal();
+  aboutModalModule.open();
 });
 
 ipcRenderer.on('add-videos', (event, newVideos) => {
@@ -1345,13 +1596,205 @@ function setupExternalLinks() {
   });
 }
 
+// ============================================
+// VIDEO STATISTICS
+// ============================================
+
+function toggleVideoStats() {
+  showVideoStats = !showVideoStats;
+  updateVideoStatsDisplay();
+  
+  // Update button state
+  const statsBtn = document.getElementById('statsBtn');
+  if (statsBtn) {
+    statsBtn.classList.toggle('active', showVideoStats);
+  }
+}
+
+function updateVideoStatsDisplay() {
+  let statsOverlay = document.getElementById('videoStatsOverlay');
+  
+  if (!showVideoStats) {
+    if (statsOverlay) statsOverlay.remove();
+    return;
+  }
+  
+  if (!videoPlayer.src || videoPlayer.readyState < 2) {
+    if (statsOverlay) statsOverlay.remove();
+    return;
+  }
+  
+  if (!statsOverlay) {
+    statsOverlay = document.createElement('div');
+    statsOverlay.id = 'videoStatsOverlay';
+    statsOverlay.className = 'video-stats-overlay';
+    document.querySelector('.video-container').appendChild(statsOverlay);
+  }
+  
+  const video = videos[currentVideoIndex];
+  const stats = {
+    resolution: `${videoPlayer.videoWidth}×${videoPlayer.videoHeight}`,
+    aspectRatio: getAspectRatio(videoPlayer.videoWidth, videoPlayer.videoHeight),
+    duration: formatTime(videoPlayer.duration),
+    currentTime: formatTime(videoPlayer.currentTime),
+    playbackRate: `${videoPlayer.playbackRate}x`,
+    volume: `${Math.round(videoPlayer.volume * 100)}%`,
+    muted: videoPlayer.muted ? 'Yes' : 'No',
+    loop: videoPlayer.loop ? 'Yes' : 'No',
+    fileSize: video ? formatFileSize(video.size) : 'N/A',
+    fileName: video ? video.name : 'N/A',
+    buffered: getBufferedPercent(),
+    networkState: getNetworkState(),
+    readyState: getReadyState()
+  };
+  
+  statsOverlay.innerHTML = `
+    <div class="stats-header">
+      <span>Video Statistics</span>
+      <button class="stats-close" onclick="toggleVideoStats()">×</button>
+    </div>
+    <div class="stats-content">
+      <div class="stats-row"><span>Resolution:</span><span>${stats.resolution}</span></div>
+      <div class="stats-row"><span>Aspect Ratio:</span><span>${stats.aspectRatio}</span></div>
+      <div class="stats-row"><span>Duration:</span><span>${stats.duration}</span></div>
+      <div class="stats-row"><span>Current Time:</span><span>${stats.currentTime}</span></div>
+      <div class="stats-row"><span>Playback Speed:</span><span>${stats.playbackRate}</span></div>
+      <div class="stats-row"><span>Volume:</span><span>${stats.volume}</span></div>
+      <div class="stats-row"><span>Muted:</span><span>${stats.muted}</span></div>
+      <div class="stats-row"><span>Loop:</span><span>${stats.loop}</span></div>
+      <div class="stats-row"><span>File Size:</span><span>${stats.fileSize}</span></div>
+      <div class="stats-row"><span>Buffered:</span><span>${stats.buffered}</span></div>
+      <div class="stats-row"><span>Network:</span><span>${stats.networkState}</span></div>
+    </div>
+  `;
+}
+
+function getAspectRatio(w, h) {
+  const gcd = (a, b) => b ? gcd(b, a % b) : a;
+  const divisor = gcd(w, h);
+  return `${w / divisor}:${h / divisor}`;
+}
+
+function getBufferedPercent() {
+  if (videoPlayer.buffered.length > 0) {
+    const buffered = videoPlayer.buffered.end(videoPlayer.buffered.length - 1);
+    return `${Math.round((buffered / videoPlayer.duration) * 100)}%`;
+  }
+  return '0%';
+}
+
+function getNetworkState() {
+  const states = ['Empty', 'Idle', 'Loading', 'No Source'];
+  return states[videoPlayer.networkState] || 'Unknown';
+}
+
+function getReadyState() {
+  const states = ['Nothing', 'Metadata', 'Current Data', 'Future Data', 'Enough Data'];
+  return states[videoPlayer.readyState] || 'Unknown';
+}
+
+// Update stats periodically when visible
+setInterval(() => {
+  if (showVideoStats) {
+    updateVideoStatsDisplay();
+  }
+}, 500);
+
+// Theme System is now handled by themesModule
+
+// ============================================
+// MINI PLAYER MODE
+// ============================================
+
+function toggleMiniPlayer() {
+  isMiniPlayer = !isMiniPlayer;
+  
+  if (isMiniPlayer) {
+    document.body.classList.add('mini-player-mode');
+    ipcRenderer.send('set-mini-player', true);
+  } else {
+    document.body.classList.remove('mini-player-mode');
+    ipcRenderer.send('set-mini-player', false);
+  }
+  
+  updateMiniPlayerUI();
+}
+
+function updateMiniPlayerUI() {
+  const miniBtn = document.getElementById('miniPlayerBtn');
+  if (miniBtn) {
+    miniBtn.classList.toggle('active', isMiniPlayer);
+  }
+}
+
+// ============================================
+// EXTENDED KEYBOARD SHORTCUTS
+// ============================================
+
+// Updated keyboard handler with new shortcuts
+const originalHandleKeyboard = handleKeyboard;
+handleKeyboard = function(e) {
+  if (e.target.tagName === 'INPUT') return;
+  
+  // New shortcuts
+  switch(e.code) {
+    case 'KeyH':
+      // H for Help
+      e.preventDefault();
+      helpModalModule.open();
+      return;
+    case 'KeyI':
+      // I for Info/Stats
+      e.preventDefault();
+      toggleVideoStats();
+      return;
+    case 'KeyT':
+      // T for Theme
+      e.preventDefault();
+      themesModule.cycle();
+      return;
+    case 'KeyW':
+      // W for Mini Window
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        toggleMiniPlayer();
+        return;
+      }
+      break;
+    case 'Comma':
+      // , for frame back
+      e.preventDefault();
+      if (videoPlayer.src) {
+        videoPlayer.pause();
+        videoPlayer.currentTime = Math.max(0, videoPlayer.currentTime - (1 / 30));
+      }
+      return;
+    case 'Period':
+      // . for frame forward
+      e.preventDefault();
+      if (videoPlayer.src) {
+        videoPlayer.pause();
+        videoPlayer.currentTime = Math.min(videoPlayer.duration, videoPlayer.currentTime + (1 / 30));
+      }
+      return;
+  }
+  
+  // Call original handler for other keys
+  originalHandleKeyboard.call(this, e);
+};
+
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', async () => {
-  setupAboutModal();
+  // Initialize modules
+  helpModalModule.init();
+  aboutModalModule.init();
+  themesModule.init();
+  
   setupPlaylistModal();
   setupSavedPlaylistsToggle();
   setupExternalLinks();
   setupPreviewScroll();
+  // Theme loading is handled by themesModule.init()
   await loadSavedPlaylists();
   init();
 });

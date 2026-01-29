@@ -24,13 +24,22 @@
           </span>
           TronVid
         </h1>
-        <button id="aboutBtn" class="btn-icon about-header-btn" title="About TronVid">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="16" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-          </svg>
-        </button>
+        <div class="header-buttons">
+          <button id="helpBtn" class="btn-icon about-header-btn" title="Help (H)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </button>
+          <button id="aboutBtn" class="btn-icon about-header-btn" title="About TronVid">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </button>
+        </div>
       </div>
       
       <div class="upload-section">
@@ -227,6 +236,15 @@
               </svg>
             </button>
             
+            <!-- A-B Loop Button -->
+            <div class="ab-loop-control">
+              <button id="abLoopBtn" class="control-btn" title="A-B Loop ([ = A, ] = B, \ = Clear)">
+                <span class="ab-text">A-B</span>
+                <span id="abLoopIndicator" class="ab-indicator" style="display: none;"></span>
+              </button>
+              <span id="abLoopDisplay" class="ab-loop-display" style="display: none;"></span>
+            </div>
+            
             <!-- Screenshot Button -->
             <button id="screenshotBtn" class="control-btn" title="Screenshot (S)">
               <svg viewBox="0 0 24 24" fill="currentColor">
@@ -238,6 +256,27 @@
             <button id="pipBtn" class="control-btn" title="Picture-in-Picture">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19 7h-8v6h8V7zm2-4H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+              </svg>
+            </button>
+            
+            <!-- Video Stats Button -->
+            <button id="statsBtn" class="control-btn" title="Video Statistics (I)">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z"/>
+              </svg>
+            </button>
+            
+            <!-- Theme Button -->
+            <button id="themeBtn" class="control-btn" title="Change Theme (T)">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+              </svg>
+            </button>
+            
+            <!-- Mini Player Button -->
+            <button id="miniPlayerBtn" class="control-btn" title="Mini Player (Ctrl+W)">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 11h-8v6h8v-6zm4 8V4.98C23 3.88 22.1 3 21 3H3c-1.1 0-2 .88-2 1.98V19c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zm-2 .02H3V4.97h18v14.05z"/>
               </svg>
             </button>
             
@@ -286,6 +325,141 @@
       <div class="modal-buttons">
         <button id="cancelPlaylistBtn" class="btn btn-secondary">Cancel</button>
         <button id="confirmPlaylistBtn" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Modal -->
+  <div id="helpModal" class="modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-help">
+      <button class="modal-close" id="closeHelp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <h2>TronVid Help</h2>
+      
+      <div class="help-intro">
+        <p>Welcome to TronVid! Here you'll find all features and keyboard shortcuts for optimal video playback.</p>
+      </div>
+      
+      <div class="help-sections">
+        <!-- Playback -->
+        <div class="help-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            Playback
+          </h3>
+          <div class="help-items">
+            <div class="help-item"><span class="help-key">Space</span><span>Play or pause video</span></div>
+            <div class="help-item"><span class="help-key">←</span><span>Rewind 10 seconds</span></div>
+            <div class="help-item"><span class="help-key">→</span><span>Fast forward 10 seconds</span></div>
+            <div class="help-item"><span class="help-key">,</span><span>Previous frame (fine control)</span></div>
+            <div class="help-item"><span class="help-key">.</span><span>Next frame (fine control)</span></div>
+            <div class="help-item"><span class="help-key">N</span><span>Next video in playlist</span></div>
+            <div class="help-item"><span class="help-key">P</span><span>Previous video in playlist</span></div>
+          </div>
+        </div>
+        
+        <!-- Volume -->
+        <div class="help-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+            </svg>
+            Volume
+          </h3>
+          <div class="help-items">
+            <div class="help-item"><span class="help-key">↑</span><span>Increase volume (+10%)</span></div>
+            <div class="help-item"><span class="help-key">↓</span><span>Decrease volume (-10%)</span></div>
+            <div class="help-item"><span class="help-key">M</span><span>Mute / Unmute audio</span></div>
+          </div>
+          <p class="help-tip">💡 Hover over the volume icon to reveal the volume slider.</p>
+        </div>
+        
+        <!-- A-B Loop -->
+        <div class="help-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+              <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+            </svg>
+            A-B Loop
+          </h3>
+          <p class="help-description">Automatically repeat a specific section of the video:</p>
+          <div class="help-items">
+            <div class="help-item"><span class="help-key">[</span><span>Set start point (A) at current position</span></div>
+            <div class="help-item"><span class="help-key">]</span><span>Set end point (B) and activate loop</span></div>
+            <div class="help-item"><span class="help-key">\</span><span>Clear and disable A-B loop</span></div>
+            <div class="help-item"><span class="help-key">L</span><span>Toggle loop on/off (keeps points)</span></div>
+          </div>
+          <p class="help-tip">💡 The A-B section is highlighted on the progress bar.</p>
+        </div>
+        
+        <!-- View & Window -->
+        <div class="help-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+              <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+            </svg>
+            View & Window
+          </h3>
+          <div class="help-items">
+            <div class="help-item"><span class="help-key">F</span><span>Toggle fullscreen mode</span></div>
+            <div class="help-item"><span class="help-key">Ctrl+B</span><span>Show/hide sidebar</span></div>
+            <div class="help-item"><span class="help-key">Ctrl+W</span><span>Compact mini player mode</span></div>
+            <div class="help-item"><span class="help-key">I</span><span>Show video info (resolution, etc.)</span></div>
+            <div class="help-item"><span class="help-key">T</span><span>Change color theme (5 available)</span></div>
+          </div>
+        </div>
+        
+        <!-- More Features -->
+        <div class="help-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            </svg>
+            More Features
+          </h3>
+          <div class="help-items">
+            <div class="help-item"><span class="help-key">S</span><span>Save screenshot (PNG of current frame)</span></div>
+          </div>
+          <p class="help-description" style="margin-top: 8px;"><strong>In the control bar you'll find:</strong></p>
+          <div class="help-items">
+            <div class="help-item"><span class="help-key">PiP</span><span>Picture-in-Picture: float video over windows</span></div>
+            <div class="help-item"><span class="help-key">Speed</span><span>Adjust playback speed (0.25x to 2x)</span></div>
+            <div class="help-item"><span class="help-key">Shuffle</span><span>Random playlist playback order</span></div>
+            <div class="help-item"><span class="help-key">Loop</span><span>Repeat current video endlessly</span></div>
+          </div>
+        </div>
+        
+        <!-- Playlist Management -->
+        <div class="help-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+              <path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/>
+            </svg>
+            Playlist Management
+          </h3>
+          <div class="help-items">
+            <div class="help-item"><span class="help-key">Files</span><span>Add individual video files to playlist</span></div>
+            <div class="help-item"><span class="help-key">Folder</span><span>Load all videos from a folder</span></div>
+            <div class="help-item"><span class="help-key">Drag & Drop</span><span>Drag videos into the app</span></div>
+          </div>
+          <p class="help-description" style="margin-top: 8px;"><strong>Organize your playlist:</strong></p>
+          <div class="help-items">
+            <div class="help-item"><span class="help-key">Drag</span><span>Reorder videos in the list</span></div>
+            <div class="help-item"><span class="help-key">×</span><span>Remove a single video from playlist</span></div>
+            <div class="help-item"><span class="help-key">💾</span><span>Save playlist for later use</span></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="help-footer">
+        <p>Press <span class="help-key">H</span> to open this help anytime</p>
       </div>
     </div>
   </div>
