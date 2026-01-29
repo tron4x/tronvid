@@ -7,16 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.6.4] - 2026-01-26
-
-### Changed
-- Reorganized project structure for professional layout
-- Moved source files to `src/` directory
-- Moved assets to `assets/` directory
-- Updated all internal references
+## [1.6.4] - 2026-01-29
 
 ### Added
-- Professional GitHub repository files (CONTRIBUTING.md, CODE_OF_CONDUCT.md)
+- **Help Modal** - Press `H` to view all keyboard shortcuts and features
+- **A-B Loop** - Set start/end points to repeat a section (`[`, `]`, `\`, `L` keys)
+- **5 Color Themes** - Dark (default), Light, Purple, Blue, Green (press `T` to cycle)
+- **Video Statistics Overlay** - Resolution, aspect ratio, playback info (press `I`)
+- **Mini Player Mode** - Compact window for multitasking (`Ctrl/Cmd + W`)
+- **Frame-by-Frame Navigation** - Use `,` and `.` for precise frame control
+- **About Modal** - Version info and credits
+
+### Changed
+- **Modular Architecture** - Code reorganized into separate modules:
+  - `helpModal.js` - Help overlay functionality
+  - `aboutModal.js` - About dialog functionality
+  - `themes.js` - Theme system with 5 themes
+  - `videoStats.js` - Video statistics display
+  - `abLoop.js` - A-B loop point management
+- **Upgraded Electron** - Now using Electron 40.0.0
+- **Improved A-B Loop Button** - Single click to set/toggle, double-click to clear
+- **Professional Documentation** - Updated README, CONTRIBUTING, and CHANGELOG
+
+### Fixed
+- A-B Loop double-click clearing now works correctly with click timing mechanism
+
+### Technical
+- Source files organized in `src/` directory
+- Modules in `src/modules/` directory
+- All 5 themes stored in localStorage
+- A-B loop markers displayed on progress bar
 
 ## [1.0.0] - 2026-01-26
 

@@ -29,6 +29,12 @@
 
 ---
 
+<p align="center">
+  <img src="public/screen.png" alt="TronVid Screenshot" width="800">
+</p>
+
+---
+
 ## ✨ Features
 
 ### Core Features
