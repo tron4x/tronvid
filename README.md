@@ -116,6 +116,15 @@ npm run build:all      # All platforms
 - **Clear Playlist** - Click "Clear Playlist" to remove all videos
 - **Reorder** - Drag playlist items to change order
 
+> **💡 How Playlists Work:**  
+> TronVid stores only the **file paths** to your videos, not the actual video files. This means:
+> - ✅ No disk space is wasted on duplicates
+> - ✅ Playlists load instantly
+> - ✅ Original files stay in their original location
+> - ⚠️ If you move or delete a video file, the playlist entry won't work anymore
+> 
+> Playlists are saved locally in your user data folder and persist between sessions.
+
 ### A-B Loop
 
 Repeat a specific section of the video:
