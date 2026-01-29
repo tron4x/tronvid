@@ -30,7 +30,15 @@
 ---
 
 <p align="center">
-  <img src="public/screen.png" alt="TronVid Screenshot" width="800">
+  <img src="public/screen.png" alt="TronVid" width="800">
+  <br>
+  <em>Main Window</em>
+</p>
+
+<p align="center">
+  <img src="public/screen1.png" alt="TronVid miniplayer" width="800">
+  <br>
+  <em>Mini Player</em>
 </p>
 
 ---
