@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tron4x/tronvid/releases"><img src="https://img.shields.io/badge/version-1.6.4-orange" alt="Version"></a>
+  <a href="https://github.com/tron4x/tronvid/releases"><img src="https://img.shields.io/badge/version-1.7.1-orange" alt="Version"></a>
   <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" alt="License"></a>
   <img src="https://img.shields.io/badge/electron-40.0.0-9feaf9" alt="Electron">
@@ -54,9 +54,15 @@
 
 ### Playback Features
 - 🔁 **A-B Loop** - Set start/end points to loop a specific section
+- 🔂 **Chapter Loop** - Click preview thumbnails to loop video sections (press `C`)
 - 🎚️ **Speed Control** - Adjust playback speed (0.25x - 2x)
 - 🔀 **Shuffle & Loop** - Shuffle playlist or loop current video
 - 🎞️ **Frame-by-Frame** - Navigate frame by frame with `,` and `.` keys
+
+### Security
+- 🔒 **Context Isolation** - Secure renderer process with isolated context
+- 🛡️ **Content Security Policy** - Strict CSP prevents XSS attacks
+- 🔐 **Secure IPC** - Whitelist-based IPC communication
 
 ### Advanced Features
 - 📸 **Screenshot Capture** - Save screenshots as PNG files
@@ -182,6 +188,13 @@ Press `T` to cycle through 5 color themes:
 | `\` | Clear A-B loop |
 | `L` | Toggle A-B loop on/off |
 
+### Chapter Loop
+
+| Shortcut | Action |
+|----------|--------|
+| `C` | Toggle chapter loop mode |
+| Click Preview | Loop that section (when mode active) |
+
 ### View & Window
 
 | Shortcut | Action |
@@ -242,12 +255,14 @@ tronvid/
 │   ├── renderer.js         # Renderer process (UI logic)
 │   ├── index.html          # Main HTML file
 │   ├── styles.css          # Application styles
+│   ├── preload.js          # Secure IPC bridge
 │   └── modules/            # Modular components
 │       ├── helpModal.js    # Help modal functionality
 │       ├── aboutModal.js   # About modal functionality
 │       ├── themes.js       # Theme system
 │       ├── videoStats.js   # Video statistics overlay
-│       └── abLoop.js       # A-B loop functionality
+│       ├── abLoop.js       # A-B loop functionality
+│       └── chapterLoop.js  # Chapter loop functionality
 ├── assets/                 # Static assets
 │   └── logo.png            # Application logo
 ├── build/                  # Build resources

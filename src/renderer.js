@@ -1,19 +1,239 @@
-const { ipcRenderer, shell, webUtils } = require('electron');
-const fs = require('fs');
-const path = require('path');
+// ============================================
+// SECURE API ACCESS (via preload.js)
+// ============================================
 
-// Import Modules
-const helpModalModule = require('./modules/helpModal');
-const aboutModalModule = require('./modules/aboutModal');
-const themesModule = require('./modules/themes');
-const videoStatsModule = require('./modules/videoStats');
-const abLoopModule = require('./modules/abLoop');
+// Module-local implementations (no Node.js required)
+const helpModalModule = {
+  init() {
+    this.modal = document.getElementById('helpModal');
+    this.closeBtn = document.getElementById('closeHelp');
+    const helpBtn = document.getElementById('helpBtn');
+    if (helpBtn) helpBtn.addEventListener('click', () => this.open());
+    if (this.closeBtn) this.closeBtn.addEventListener('click', () => this.close());
+    const overlay = this.modal?.querySelector('.modal-overlay');
+    if (overlay) overlay.addEventListener('click', () => this.close());
+  },
+  open() { if (this.modal) this.modal.classList.add('show'); },
+  close() { if (this.modal) this.modal.classList.remove('show'); }
+};
 
-// Platform detection
-const platform = process.platform;
-const isMac = platform === 'darwin';
-const isWindows = platform === 'win32';
-const isLinux = platform === 'linux';
+const aboutModalModule = {
+  init() {
+    this.modal = document.getElementById('aboutModal');
+    this.closeBtn = document.getElementById('closeAbout');
+    const aboutBtn = document.getElementById('aboutBtn');
+    if (aboutBtn) aboutBtn.addEventListener('click', () => this.open());
+    if (this.closeBtn) this.closeBtn.addEventListener('click', () => this.close());
+    const overlay = this.modal?.querySelector('.modal-overlay');
+    if (overlay) overlay.addEventListener('click', () => this.close());
+  },
+  open() { if (this.modal) this.modal.classList.add('show'); },
+  close() { if (this.modal) this.modal.classList.remove('show'); }
+};
+
+const themesModule = {
+  themes: ['dark', 'light', 'purple', 'blue', 'green'],
+  currentTheme: 'dark',
+  init() {
+    const saved = localStorage.getItem('tronvid-theme');
+    if (saved && this.themes.includes(saved)) this.currentTheme = saved;
+    this.apply(this.currentTheme);
+    const themeBtn = document.getElementById('themeBtn');
+    if (themeBtn) themeBtn.addEventListener('click', () => this.cycle());
+  },
+  apply(theme) {
+    document.body.setAttribute('data-theme', theme);
+    this.currentTheme = theme;
+    localStorage.setItem('tronvid-theme', theme);
+  },
+  cycle() {
+    const i = this.themes.indexOf(this.currentTheme);
+    this.apply(this.themes[(i + 1) % this.themes.length]);
+  }
+};
+
+const chapterLoopModule = {
+  videoPlayer: null,
+  modeActive: false,
+  loopEnabled: false,
+  chapterStart: null,
+  chapterEnd: null,
+  chapterPoints: [],
+  activeChapterIndex: -1,
+  
+  init(player) {
+    this.videoPlayer = player;
+    const btn = document.getElementById('chapterLoopBtn');
+    if (btn) btn.addEventListener('click', () => this.toggleMode());
+    if (player) player.addEventListener('timeupdate', () => this.checkLoop());
+  },
+  
+  setChapterPoints(duration) {
+    if (!duration || duration === Infinity) return;
+    this.chapterPoints = [0, 0.05, 0.15, 0.30, 0.45, 0.55, 0.70, 0.85, 0.95, 1].map(p => duration * p);
+    this.clearLoop();
+  },
+  
+  toggleMode() {
+    this.modeActive = !this.modeActive;
+    if (!this.modeActive) {
+      this.clearLoop();
+      this.showFeedback('Chapter Loop: OFF');
+    } else {
+      this.showFeedback('Chapter Loop: ON - Click a preview to loop');
+    }
+    const btn = document.getElementById('chapterLoopBtn');
+    if (btn) btn.classList.toggle('active', this.modeActive);
+  },
+  
+  handlePreviewClick(time) {
+    if (!this.modeActive || !this.videoPlayer?.duration) return false;
+    
+    // Preview times: 0.05, 0.15, 0.30, 0.45, 0.55, 0.70, 0.85, 0.95 (8 previews)
+    // Chapter points: same percentages create segments
+    // Find which chapter segment the clicked time belongs to
+    for (let i = 0; i < this.chapterPoints.length - 1; i++) {
+      if (time >= this.chapterPoints[i] && time < this.chapterPoints[i + 1]) {
+        this.chapterStart = this.chapterPoints[i];
+        this.chapterEnd = this.chapterPoints[i + 1];
+        this.loopEnabled = true;
+        this.activeChapterIndex = i;
+        this.videoPlayer.currentTime = this.chapterStart;
+        this.updateMarkers();
+        
+        // Find the preview index - preview index = chapter index - 1 (since previews start at 0.05, not 0)
+        // But we want to highlight the preview that was clicked
+        const previews = document.querySelectorAll('.preview-item');
+        let previewIndex = -1;
+        previews.forEach((p, idx) => {
+          const pTime = parseFloat(p.dataset.time);
+          if (pTime >= this.chapterStart && pTime < this.chapterEnd) {
+            previewIndex = idx;
+          }
+        });
+        if (previewIndex >= 0) {
+          this.highlightPreview(previewIndex);
+        }
+        
+        this.showFeedback(`🔁 Looping: ${this.formatTime(this.chapterStart)} - ${this.formatTime(this.chapterEnd)}`);
+        return true;
+      }
+    }
+    return false;
+  },
+  
+  clearLoop() {
+    this.loopEnabled = false;
+    this.chapterStart = null;
+    this.chapterEnd = null;
+    this.activeChapterIndex = -1;
+    this.removeMarkers();
+    this.clearPreviewHighlight();
+  },
+  
+  checkLoop() {
+    if (this.loopEnabled && this.chapterEnd && this.videoPlayer.currentTime >= this.chapterEnd - 0.1) {
+      this.videoPlayer.currentTime = this.chapterStart;
+    }
+  },
+  
+  updateMarkers() {
+    this.removeMarkers();
+    if (!this.loopEnabled || !this.videoPlayer?.duration) return;
+    
+    const progressBar = document.getElementById('progressBar');
+    const progressContainer = progressBar?.parentElement;
+    if (!progressContainer) return;
+    
+    // Ensure container has relative positioning
+    if (getComputedStyle(progressContainer).position === 'static') {
+      progressContainer.style.position = 'relative';
+    }
+    
+    const region = document.createElement('div');
+    region.className = 'chapter-loop-region';
+    const startPct = (this.chapterStart / this.videoPlayer.duration) * 100;
+    const widthPct = ((this.chapterEnd - this.chapterStart) / this.videoPlayer.duration) * 100;
+    region.style.cssText = `
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 8px;
+      left: ${startPct}%;
+      width: ${widthPct}%;
+      background: rgba(0, 255, 136, 0.5);
+      border-radius: 4px;
+      pointer-events: none;
+      z-index: 2;
+      box-shadow: 0 0 8px #00ff88;
+    `;
+    progressContainer.appendChild(region);
+  },
+  
+  removeMarkers() {
+    document.querySelectorAll('.chapter-loop-region').forEach(el => el.remove());
+  },
+  
+  highlightPreview(index) {
+    this.clearPreviewHighlight();
+    const previews = document.querySelectorAll('.preview-item');
+    if (previews[index]) {
+      previews[index].classList.add('chapter-loop-active');
+      previews[index].style.outline = '3px solid #00ff88';
+      previews[index].style.outlineOffset = '2px';
+    }
+  },
+  
+  clearPreviewHighlight() {
+    document.querySelectorAll('.preview-item').forEach(el => {
+      el.classList.remove('chapter-loop-active');
+      el.style.outline = '';
+      el.style.outlineOffset = '';
+    });
+  },
+  
+  showFeedback(text) {
+    const existing = document.querySelector('.chapter-loop-feedback');
+    if (existing) existing.remove();
+    
+    const feedback = document.createElement('div');
+    feedback.className = 'chapter-loop-feedback';
+    feedback.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: #00ff88;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      z-index: 10000;
+      pointer-events: none;
+      border: 2px solid #00ff88;
+      animation: chapterFeedback 1.5s ease-out forwards;
+    `;
+    feedback.textContent = text;
+    document.body.appendChild(feedback);
+    
+    setTimeout(() => feedback.remove(), 1500);
+  },
+  
+  formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return `${m}:${sec.toString().padStart(2, '0')}`;
+  },
+  
+  isModeActive() { return this.modeActive; }
+};
+
+// Platform detection (from preload)
+const platform = window.platformInfo?.platform || 'unknown';
+const isMac = window.platformInfo?.isMac || false;
+const isWindows = window.platformInfo?.isWindows || false;
+const isLinux = window.platformInfo?.isLinux || false;
 
 // Add platform class to body for CSS
 document.body.classList.add(platform);
@@ -289,8 +509,8 @@ function handleDrop(e) {
     const ext = '.' + file.name.split('.').pop().toLowerCase();
     return videoExtensions.includes(ext);
   }).map(file => ({
-    // Use webUtils.getPathForFile for newer Electron versions
-    path: webUtils.getPathForFile(file),
+    // Use webUtils via preload to get file path
+    path: window.fileUtils.getPathForFile(file),
     name: file.name,
     size: file.size,
     thumbnail: null
@@ -303,14 +523,14 @@ function handleDrop(e) {
 
 // Video Selection
 async function selectVideos() {
-  const selectedVideos = await ipcRenderer.invoke('select-videos');
+  const selectedVideos = await window.electronAPI.invoke('select-videos');
   if (selectedVideos.length > 0) {
     addVideos(selectedVideos.map(v => ({ ...v, thumbnail: null })));
   }
 }
 
 async function selectFolder() {
-  const folderVideos = await ipcRenderer.invoke('select-folder');
+  const folderVideos = await window.electronAPI.invoke('select-folder');
   if (folderVideos.length > 0) {
     addVideos(folderVideos.map(v => ({ ...v, thumbnail: null })));
   }
@@ -355,7 +575,7 @@ async function autoSaveCurrentPlaylist() {
         })),
         createdAt: pl.createdAt
       };
-      await ipcRenderer.invoke('save-playlist', playlist);
+      await window.electronAPI.invoke('save-playlist', playlist);
       await loadSavedPlaylists();
     }
   }
@@ -633,6 +853,8 @@ function updateDuration() {
   durationEl.textContent = formatTime(videoPlayer.duration);
   // Generate video previews when duration is available
   generateVideoPreviews();
+  // Set chapter points for chapter loop
+  chapterLoopModule.setChapterPoints(videoPlayer.duration);
 }
 
 function seekVideo() {
@@ -1100,7 +1322,7 @@ async function takeScreenshot() {
   const filename = `${baseName}_${timestamp}.png`;
   
   // Save screenshot
-  const result = await ipcRenderer.invoke('save-screenshot', { dataUrl, filename });
+  const result = await window.electronAPI.invoke('save-screenshot', { dataUrl, filename });
   
   if (result.success) {
     showScreenshotFeedback();
@@ -1153,6 +1375,17 @@ async function generateVideoPreviews() {
   previewThumbnailsEl.querySelectorAll('.preview-item').forEach(item => {
     item.addEventListener('click', () => {
       const time = parseFloat(item.dataset.time);
+      
+      // Check if chapter loop mode handles this click
+      if (chapterLoopModule.handlePreviewClick(time)) {
+        // Chapter loop mode handled the click - play video
+        if (videoPlayer.paused) {
+          playVideo();
+        }
+        return;
+      }
+      
+      // Normal behavior - just seek to time
       videoPlayer.currentTime = time;
       if (videoPlayer.paused) {
         playVideo();
@@ -1364,7 +1597,7 @@ function setupSavedPlaylistsToggle() {
 
 // Load saved playlists from storage
 async function loadSavedPlaylists() {
-  savedPlaylists = await ipcRenderer.invoke('get-playlists');
+  savedPlaylists = await window.electronAPI.invoke('get-playlists');
   renderSavedPlaylists();
 }
 
@@ -1471,7 +1704,7 @@ async function saveCurrentPlaylist(name, allowEmpty = false) {
     createdAt: new Date().toISOString()
   };
   
-  const success = await ipcRenderer.invoke('save-playlist', playlist);
+  const success = await window.electronAPI.invoke('save-playlist', playlist);
   if (success) {
     currentSavedPlaylistId = playlist.id;
     await loadSavedPlaylists();
@@ -1481,7 +1714,7 @@ async function saveCurrentPlaylist(name, allowEmpty = false) {
 
 // Delete a saved playlist
 async function deleteSavedPlaylist(id) {
-  const success = await ipcRenderer.invoke('delete-playlist', id);
+  const success = await window.electronAPI.invoke('delete-playlist', id);
   if (success) {
     if (currentSavedPlaylistId === id) {
       currentSavedPlaylistId = null;
@@ -1577,11 +1810,11 @@ function closePlaylistModalFn() {
 }
 
 // IPC Listeners for Menu Events
-ipcRenderer.on('show-about', () => {
+window.electronAPI.on('show-about', () => {
   aboutModalModule.open();
 });
 
-ipcRenderer.on('add-videos', (event, newVideos) => {
+window.electronAPI.on('add-videos', (newVideos) => {
   addVideos(newVideos.map(v => ({ ...v, thumbnail: null })));
 });
 
@@ -1591,7 +1824,7 @@ function setupExternalLinks() {
     const link = e.target.closest('a.external-link');
     if (link) {
       e.preventDefault();
-      shell.openExternal(link.href);
+      window.shellAPI.openExternal(link.href);
     }
   });
 }
@@ -1711,10 +1944,10 @@ function toggleMiniPlayer() {
   
   if (isMiniPlayer) {
     document.body.classList.add('mini-player-mode');
-    ipcRenderer.send('set-mini-player', true);
+    window.electronAPI.send('set-mini-player', true);
   } else {
     document.body.classList.remove('mini-player-mode');
-    ipcRenderer.send('set-mini-player', false);
+    window.electronAPI.send('set-mini-player', false);
   }
   
   updateMiniPlayerUI();
@@ -1753,6 +1986,11 @@ handleKeyboard = function(e) {
       e.preventDefault();
       themesModule.cycle();
       return;
+    case 'KeyC':
+      // C for Chapter Loop Mode
+      e.preventDefault();
+      chapterLoopModule.toggleMode();
+      return;
     case 'KeyW':
       // W for Mini Window
       if (e.ctrlKey || e.metaKey) {
@@ -1789,6 +2027,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   helpModalModule.init();
   aboutModalModule.init();
   themesModule.init();
+  chapterLoopModule.init(videoPlayer);
   
   setupPlaylistModal();
   setupSavedPlaylistsToggle();

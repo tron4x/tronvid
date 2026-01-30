@@ -2013,3 +2013,61 @@ body.mini-player-mode .control-btn.play-btn svg {
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================
+   CHAPTER LOOP
+   ============================================ */
+#chapterLoopBtn {
+  position: relative;
+}
+
+#chapterLoopBtn .chapter-loop-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
+  padding: 1px 3px;
+  border-radius: 2px;
+  line-height: 1;
+}
+
+#chapterLoopBtn.active {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+}
+
+#chapterLoopBtn.active .chapter-loop-badge {
+  background: var(--success);
+  color: white;
+}
+
+.chapter-loop-region {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.25), rgba(16, 185, 129, 0.15));
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 6;
+  border-left: 2px solid var(--success);
+  border-right: 2px solid var(--success);
+}
+
+/* Chapter feedback animation */
+@keyframes chapterFeedback {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.chapter-feedback {
+  animation: chapterFeedback 0.8s ease-out forwards;
+}

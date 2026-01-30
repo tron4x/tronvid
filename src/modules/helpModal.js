@@ -1,57 +1,54 @@
 /**
- * Help Modal Module
- * Handles the help modal functionality
+ * Help Modal Module (Browser-compatible, no Node.js required)
  */
 
-let helpBtn = null;
-let helpModal = null;
-let closeHelp = null;
-let helpModalOverlay = null;
-
-function init() {
-  helpBtn = document.getElementById('helpBtn');
-  helpModal = document.getElementById('helpModal');
-  closeHelp = document.getElementById('closeHelp');
-  helpModalOverlay = helpModal ? helpModal.querySelector('.modal-overlay') : null;
+const helpModalModule = {
+  helpModal: null,
+  closeHelp: null,
+  helpModalOverlay: null,
   
-  setupEventListeners();
-}
-
-function setupEventListeners() {
-  if (helpBtn && helpModal) {
-    helpBtn.addEventListener('click', open);
-  }
+  init() {
+    this.helpModal = document.getElementById('helpModal');
+    this.closeHelp = document.getElementById('closeHelp');
+    this.helpModalOverlay = this.helpModal ? this.helpModal.querySelector('.modal-overlay') : null;
+    
+    this.setupEventListeners();
+  },
   
-  if (closeHelp) {
-    closeHelp.addEventListener('click', close);
-  }
-  
-  if (helpModalOverlay) {
-    helpModalOverlay.addEventListener('click', close);
-  }
-  
-  // Close on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && helpModal && helpModal.classList.contains('show')) {
-      close();
+  setupEventListeners() {
+    const helpBtn = document.getElementById('helpBtn');
+    
+    if (helpBtn) {
+      helpBtn.addEventListener('click', () => this.open());
     }
-  });
-}
-
-function open() {
-  if (helpModal) {
-    helpModal.classList.add('show');
+    
+    if (this.closeHelp) {
+      this.closeHelp.addEventListener('click', () => this.close());
+    }
+    
+    if (this.helpModalOverlay) {
+      this.helpModalOverlay.addEventListener('click', () => this.close());
+    }
+    
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.helpModal && this.helpModal.classList.contains('show')) {
+        this.close();
+      }
+    });
+  },
+  
+  open() {
+    if (this.helpModal) {
+      this.helpModal.classList.add('show');
+    }
+  },
+  
+  close() {
+    if (this.helpModal) {
+      this.helpModal.classList.remove('show');
+    }
   }
-}
-
-function close() {
-  if (helpModal) {
-    helpModal.classList.remove('show');
-  }
-}
-
-module.exports = {
-  init,
-  open,
-  close
 };
+
+module.exports = helpModalModule;
