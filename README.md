@@ -308,3 +308,17 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 <p align="center">
   Made with ❤️ by <a href="https://github.com/tron4x">tron4x</a>
 </p>
+<p align="center">
+  <em>
+    TronVid is developed and maintained by tron4x. While we strive for quality,<br/>
+    bugs may occur. We actively monitor and address reported issues.<br/>
+    Your feedback helps make TronVid better! 🚀<br/>
+    <br/>
+    Thank you for your support and feedback! 🙏
+  </em>
+</p>
+<p align="center">
+  <a href="https://github.com/tron4x/tronvid/issues">Report Bug</a>
+  ·
+  <a href="https://github.com/tron4x/tronvid/issues">Request Feature</a>
+</p>
