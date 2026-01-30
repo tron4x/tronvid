@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const fsPromises = require('fs').promises;
+const { execFile } = require('child_process');
 
 // Set app name for OS menu (macOS, Windows, Linux)
 app.setName('TronVid');
@@ -131,7 +133,6 @@ function createMenu() {
       submenu: [
         { role: 'reload' },
         { role: 'forceReload', label: 'Force Reload' },
-        { role: 'toggleDevTools', label: 'Developer Tools' },
         { type: 'separator' },
         { role: 'resetZoom', label: 'Actual Size' },
         { role: 'zoomIn', label: 'Zoom In' },
@@ -208,16 +209,15 @@ function createWindow() {
       autoHideMenuBar: false
     }),
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-      webSecurity: false
+      nodeIntegration: false,
+      contextIsolation: true,
+      webSecurity: true,
+      sandbox: false,
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
-  
-  // Open DevTools in development
-  // mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
@@ -391,4 +391,100 @@ ipcMain.handle('save-screenshot', async (event, { dataUrl, filename }) => {
     console.error('Screenshot save error:', error);
     return { success: false, error: error.message };
   }
+});
+
+// ============================================
+// VIDEO CHAPTERS EXTRACTION (FFprobe)
+// ============================================
+
+// Find FFprobe binary path
+function findFFprobe() {
+  const isMac = process.platform === 'darwin';
+  const isWindows = process.platform === 'win32';
+  
+  // Common paths to check
+  const paths = [];
+  
+  if (isMac) {
+    paths.push(
+      '/usr/local/bin/ffprobe',
+      '/opt/homebrew/bin/ffprobe',
+      '/usr/bin/ffprobe'
+    );
+  } else if (isWindows) {
+    paths.push(
+      'C:\\ffmpeg\\bin\\ffprobe.exe',
+      'C:\\Program Files\\ffmpeg\\bin\\ffprobe.exe',
+      'C:\\Program Files (x86)\\ffmpeg\\bin\\ffprobe.exe'
+    );
+    // Check PATH
+    const pathEnv = process.env.PATH || '';
+    pathEnv.split(';').forEach(p => {
+      paths.push(path.join(p, 'ffprobe.exe'));
+    });
+  } else {
+    // Linux
+    paths.push(
+      '/usr/bin/ffprobe',
+      '/usr/local/bin/ffprobe'
+    );
+  }
+  
+  // Check which path exists
+  for (const p of paths) {
+    try {
+      if (fs.existsSync(p)) {
+        return p;
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+  
+  // Fallback: just try 'ffprobe' and hope it's in PATH
+  return 'ffprobe';
+}
+
+// Extract chapters from video file using FFprobe
+ipcMain.handle('get-video-chapters', async (event, videoPath) => {
+  return new Promise((resolve) => {
+    const ffprobePath = findFFprobe();
+    
+    const args = [
+      '-v', 'quiet',
+      '-print_format', 'json',
+      '-show_chapters',
+      '-show_format',
+      videoPath
+    ];
+    
+    execFile(ffprobePath, args, { timeout: 10000 }, (error, stdout, stderr) => {
+      if (error) {
+        console.error('FFprobe error:', error.message);
+        resolve({ success: false, error: error.message, chapters: [] });
+        return;
+      }
+      
+      try {
+        const data = JSON.parse(stdout);
+        const chapters = (data.chapters || []).map((ch, index) => ({
+          id: index,
+          title: ch.tags?.title || `Chapter ${index + 1}`,
+          start: parseFloat(ch.start_time) || 0,
+          end: parseFloat(ch.end_time) || 0,
+          startTime: ch.start_time,
+          endTime: ch.end_time
+        }));
+        
+        resolve({
+          success: true,
+          chapters: chapters,
+          hasChapters: chapters.length > 0
+        });
+      } catch (parseError) {
+        console.error('FFprobe parse error:', parseError);
+        resolve({ success: false, error: 'Failed to parse FFprobe output', chapters: [] });
+      }
+    });
+  });
 });

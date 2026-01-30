@@ -1,57 +1,54 @@
 /**
- * About Modal Module
- * Handles the about modal functionality
+ * About Modal Module (Browser-compatible, no Node.js required)
  */
 
-let aboutBtn = null;
-let aboutModal = null;
-let closeAbout = null;
-let modalOverlay = null;
-
-function init() {
-  aboutBtn = document.getElementById('aboutBtn');
-  aboutModal = document.getElementById('aboutModal');
-  closeAbout = document.getElementById('closeAbout');
-  modalOverlay = aboutModal ? aboutModal.querySelector('.modal-overlay') : null;
+const aboutModalModule = {
+  aboutModal: null,
+  closeAbout: null,
+  modalOverlay: null,
   
-  setupEventListeners();
-}
-
-function setupEventListeners() {
-  if (aboutBtn && aboutModal) {
-    aboutBtn.addEventListener('click', open);
-  }
+  init() {
+    this.aboutModal = document.getElementById('aboutModal');
+    this.closeAbout = document.getElementById('closeAbout');
+    this.modalOverlay = this.aboutModal ? this.aboutModal.querySelector('.modal-overlay') : null;
+    
+    this.setupEventListeners();
+  },
   
-  if (closeAbout) {
-    closeAbout.addEventListener('click', close);
-  }
-  
-  if (modalOverlay) {
-    modalOverlay.addEventListener('click', close);
-  }
-  
-  // Close on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && aboutModal && aboutModal.classList.contains('show')) {
-      close();
+  setupEventListeners() {
+    const aboutBtn = document.getElementById('aboutBtn');
+    
+    if (aboutBtn) {
+      aboutBtn.addEventListener('click', () => this.open());
     }
-  });
-}
-
-function open() {
-  if (aboutModal) {
-    aboutModal.classList.add('show');
+    
+    if (this.closeAbout) {
+      this.closeAbout.addEventListener('click', () => this.close());
+    }
+    
+    if (this.modalOverlay) {
+      this.modalOverlay.addEventListener('click', () => this.close());
+    }
+    
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.aboutModal && this.aboutModal.classList.contains('show')) {
+        this.close();
+      }
+    });
+  },
+  
+  open() {
+    if (this.aboutModal) {
+      this.aboutModal.classList.add('show');
+    }
+  },
+  
+  close() {
+    if (this.aboutModal) {
+      this.aboutModal.classList.remove('show');
+    }
   }
-}
-
-function close() {
-  if (aboutModal) {
-    aboutModal.classList.remove('show');
-  }
-}
-
-module.exports = {
-  init,
-  open,
-  close
 };
+
+module.exports = aboutModalModule;

@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.1] - 2026-01-30
+
+### Added
+- **Chapter Loop** - Click a preview thumbnail to loop that section (press `C` to toggle mode)
+  - Visual feedback shows looped time range
+  - Green highlight on progress bar indicates loop section
+  - Green outline on active preview thumbnail
+- **Secure IPC Bridge** - New `preload.js` with secure communication
+
+### Security
+- **Context Isolation** - Enabled `contextIsolation: true` for secure renderer process
+- **Node Integration Disabled** - `nodeIntegration: false` prevents arbitrary Node.js access
+- **Web Security Enabled** - `webSecurity: true` enforces same-origin policy
+- **Content Security Policy** - Added strict CSP in HTML header
+- **IPC Whitelist** - Only allowed channels can communicate between processes
+- **Secure Shell Access** - Only validated URLs (http/https/mailto) can be opened externally
+
+### Changed
+- Renderer now uses `window.electronAPI` bridge instead of direct `require()`
+- Modules are now inline in renderer.js for context isolation compatibility
+- File drag & drop uses `webUtils.getPathForFile()` via secure bridge
+
+### Technical
+- New `src/preload.js` - Secure IPC bridge with channel whitelist
+- `window.electronAPI` - invoke, send, on methods with validation
+- `window.fileUtils` - Secure file path access for drag & drop
+- `window.shellAPI` - URL-validated external link opening
+- `window.platformInfo` - Read-only platform detection
+
 ## [1.6.4] - 2026-01-29
 
 ### Added
@@ -83,6 +112,7 @@ We use [Semantic Versioning](https://semver.org/):
 2. Install the new version (your playlists will be preserved)
 3. Enjoy the new features!
 
-[Unreleased]: https://github.com/tron4x/tronvid/compare/v1.6.4...HEAD
+[Unreleased]: https://github.com/tron4x/tronvid/compare/v1.7.1...HEAD
+[1.7.1]: https://github.com/tron4x/tronvid/compare/v1.6.4...v1.7.1
 [1.6.4]: https://github.com/tron4x/tronvid/compare/v1.0.0...v1.6.4
 [1.0.0]: https://github.com/tron4x/tronvid/releases/tag/v1.0.0

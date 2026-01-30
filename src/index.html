@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: file:; media-src 'self' file:; font-src 'self' https://fonts.gstatic.com;">
   <title>TronVid</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -245,6 +246,14 @@
               <span id="abLoopDisplay" class="ab-loop-display" style="display: none;"></span>
             </div>
             
+            <!-- Chapter Loop Button -->
+            <button id="chapterLoopBtn" class="control-btn" title="Chapter Loop (C) - Loop current preview section">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+              </svg>
+              <span class="chapter-loop-badge">CH</span>
+            </button>
+            
             <!-- Screenshot Button -->
             <button id="screenshotBtn" class="control-btn" title="Screenshot (S)">
               <svg viewBox="0 0 24 24" fill="currentColor">
@@ -478,7 +487,7 @@
         <img src="../assets/logo.png" alt="TronVid Logo">
       </div>
       <h2>TronVid</h2>
-      <p class="version">Version 1.6.4</p>
+      <p class="version">Version 1.7.1</p>
       <p class="description">A modern video player with playlist support.</p>
       <div class="about-footer">
         <p>Developed by <a href="https://github.com/tron4x" class="external-link" style="color: var(--primary);">tron4x</a></p>

@@ -1,86 +1,67 @@
 /**
- * Themes Module
- * Handles theme switching functionality
+ * Themes Module (Browser-compatible, no Node.js required)
  */
 
-const themes = ['default', 'light', 'purple', 'blue', 'green'];
-let currentThemeIndex = 0;
-
-function init() {
-  // Load saved theme
-  const savedTheme = localStorage.getItem('tronvid-theme');
-  if (savedTheme) {
-    currentThemeIndex = themes.indexOf(savedTheme);
-    if (currentThemeIndex === -1) currentThemeIndex = 0;
-    apply(themes[currentThemeIndex]);
-  }
+const themesModule = {
+  themes: ['dark', 'light', 'purple', 'blue', 'green'],
+  currentTheme: 'dark',
   
-  const themeBtn = document.getElementById('themeBtn');
-  if (themeBtn) {
-    themeBtn.addEventListener('click', cycle);
-  }
-}
-
-function cycle() {
-  currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-  const newTheme = themes[currentThemeIndex];
-  apply(newTheme);
-  localStorage.setItem('tronvid-theme', newTheme);
-  showFeedback(newTheme);
-}
-
-function apply(theme) {
-  if (theme === 'default') {
-    document.body.removeAttribute('data-theme');
-  } else {
+  init() {
+    // Load saved theme
+    const saved = localStorage.getItem('tronvid-theme');
+    if (saved && this.themes.includes(saved)) {
+      this.currentTheme = saved;
+    }
+    this.apply(this.currentTheme);
+    
+    // Setup theme button
+    const themeBtn = document.getElementById('themeBtn');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => this.cycle());
+    }
+  },
+  
+  apply(theme) {
     document.body.setAttribute('data-theme', theme);
+    this.currentTheme = theme;
+    localStorage.setItem('tronvid-theme', theme);
+  },
+  
+  cycle() {
+    const currentIndex = this.themes.indexOf(this.currentTheme);
+    const nextIndex = (currentIndex + 1) % this.themes.length;
+    const nextTheme = this.themes[nextIndex];
+    
+    this.apply(nextTheme);
+    this.showFeedback(nextTheme);
+  },
+  
+  showFeedback(theme) {
+    const existing = document.querySelector('.theme-feedback');
+    if (existing) existing.remove();
+    
+    const feedback = document.createElement('div');
+    feedback.className = 'theme-feedback';
+    feedback.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 10000;
+      pointer-events: none;
+      animation: feedbackFade 0.8s ease-out forwards;
+    `;
+    feedback.textContent = `Theme: ${theme.charAt(0).toUpperCase() + theme.slice(1)}`;
+    document.body.appendChild(feedback);
+    
+    setTimeout(() => feedback.remove(), 800);
   }
-}
-
-function showFeedback(theme) {
-  const names = {
-    default: 'Default (Dark)',
-    light: 'Light',
-    purple: 'Purple',
-    blue: 'Blue',
-    green: 'Green'
-  };
-  
-  // Remove existing feedback
-  const existing = document.querySelector('.theme-feedback');
-  if (existing) existing.remove();
-  
-  // Create and show feedback
-  const feedback = document.createElement('div');
-  feedback.className = 'theme-feedback';
-  feedback.style.cssText = `
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 16px 32px;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    z-index: 10000;
-    pointer-events: none;
-    animation: feedbackFade 1s ease-out forwards;
-  `;
-  feedback.textContent = `Theme: ${names[theme] || theme}`;
-  document.body.appendChild(feedback);
-  
-  setTimeout(() => feedback.remove(), 1000);
-}
-
-function getCurrent() {
-  return themes[currentThemeIndex];
-}
-
-module.exports = {
-  init,
-  cycle,
-  apply,
-  getCurrent
 };
+
+module.exports = themesModule;
