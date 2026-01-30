@@ -1,6 +1,12 @@
 # Dependencies
 node_modules/
 
+src/
+package.json
+package-lock.json
+assets/
+build/
+README-orig.md
 # Build output
 dist/
 out/

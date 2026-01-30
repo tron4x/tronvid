@@ -92,27 +92,6 @@ Download the latest release for your platform from the [Releases](https://github
 | Linux (AppImage) | `TronVid-x.x.x-linux-x86_64.AppImage` |
 | Linux (Debian) | `TronVid-x.x.x-linux-amd64.deb` |
 
-### Build from Source
-
-```bash
-# Clone the repository
-git clone https://github.com/tron4x/tronvid.git
-cd tronvid
-
-# Install dependencies
-npm install
-
-# Run in development mode
-npm start
-
-# Build for your platform
-npm run build:mac      # macOS
-npm run build:win64    # Windows 64-bit
-npm run build:win32    # Windows 32-bit
-npm run build:linux64  # Linux 64-bit
-npm run build:all      # All platforms
-```
-
 ## 🚀 Usage
 
 ### Adding Videos
@@ -211,82 +190,6 @@ Press `T` to cycle through 5 color themes:
 | Shortcut | Action |
 |----------|--------|
 | `S` | Take screenshot |
-
-## 🔧 Building
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v18 or later)
-- [npm](https://www.npmjs.com/) (v9 or later)
-
-### Build Commands
-
-```bash
-# Install dependencies
-npm install
-
-# Build for macOS
-npm run build:mac
-
-# Build for Windows (both architectures)
-npm run build:win
-
-# Build for Windows 64-bit only
-npm run build:win64
-
-# Build for Windows 32-bit only
-npm run build:win32
-
-# Build for Linux 64-bit
-npm run build:linux64
-
-# Build for all platforms
-npm run build:all
-```
-
-Built applications will be in the `dist/` directory.
-
-## 📁 Project Structure
-
-```
-tronvid/
-├── src/                    # Source code
-│   ├── main.js             # Electron main process
-│   ├── renderer.js         # Renderer process (UI logic)
-│   ├── index.html          # Main HTML file
-│   ├── styles.css          # Application styles
-│   ├── preload.js          # Secure IPC bridge
-│   └── modules/            # Modular components
-│       ├── helpModal.js    # Help modal functionality
-│       ├── aboutModal.js   # About modal functionality
-│       ├── themes.js       # Theme system
-│       ├── videoStats.js   # Video statistics overlay
-│       ├── abLoop.js       # A-B loop functionality
-│       └── chapterLoop.js  # Chapter loop functionality
-├── assets/                 # Static assets
-│   └── logo.png            # Application logo
-├── build/                  # Build resources
-│   ├── icon.icns           # macOS icon
-│   ├── icon.ico            # Windows icon
-│   └── icon.png            # Linux icon
-├── package.json            # Project configuration
-├── LICENSE                 # Apache 2.0 License
-├── README.md               # This file
-├── CONTRIBUTING.md         # Contributing guidelines
-├── CODE_OF_CONDUCT.md      # Code of conduct
-├── CHANGELOG.md            # Version history
-└── dist/                   # Built applications (generated)
-```
-
-## 🤝 Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on the process for submitting pull requests.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## 📄 License
 
