@@ -1,10 +1,14 @@
 # Dependencies
 node_modules/
 
-# Build output
+# Source code (nicht öffentlich)
+src/
+package.json
+package-lock.json
+build/
 dist/
 out/
-
+README-orig.md
 # Electron packager output
 release/
 release-builds/
