@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>A modern, cross-platform video player with playlist support</strong>
+  <strong>A modern, cross-platform video player</strong>
 </p>
 
 <p align="center">
