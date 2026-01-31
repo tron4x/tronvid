@@ -146,6 +146,28 @@ Download the latest release for your platform from the [Releases](https://github
 > 
 > Playlists are saved locally in your user data folder and persist between sessions.
 
+## 📁 Data Storage Locations
+
+### Playlists
+
+Playlists are stored as a JSON file in the app's user data directory:
+
+| Platform | Location |
+|----------|----------|
+| macOS | `~/Library/Application Support/TronVid/playlists.json` |
+| Windows | `%APPDATA%/TronVid/playlists.json` |
+| Linux | `~/.config/TronVid/playlists.json` |
+
+### Screenshots
+
+Screenshots are saved as PNG files in a dedicated folder inside your Pictures directory:
+
+| Platform | Location |
+|----------|----------|
+| macOS | `~/Pictures/TronVid Screenshots/` |
+| Windows | `%USERPROFILE%/Pictures/TronVid Screenshots/` |
+| Linux | `~/Pictures/TronVid Screenshots/` |
+
 ### A-B Loop
 
 Repeat a specific section of the video:
