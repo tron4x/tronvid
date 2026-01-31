@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tron4x/tronvid/releases"><img src="https://img.shields.io/badge/version-1.7.1-orange" alt="Version"></a>
+  <a href="https://github.com/tron4x/tronvid/releases"><img src="https://img.shields.io/badge/version-1.7.2-orange" alt="Version"></a>
   <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" alt="License"></a>
   <img src="https://img.shields.io/badge/electron-40.0.0-9feaf9" alt="Electron">
@@ -28,18 +28,33 @@
 </p>
 
 ---
-
+<details>
+<summary>📸 Screenshots</summary>
 <p align="center">
-  <img src="public/screen.png" alt="TronVid" width="800">
+  <img src="public/main.png" alt="TronVid" width="800">
   <br>
   <em>Main Window</em>
 </p>
 
 <p align="center">
-  <img src="public/screen1.png" alt="TronVid miniplayer" width="800">
+  <img src="public/mini.png" alt="TronVid miniplayer" width="800">
   <br>
   <em>Mini Player</em>
 </p>
+
+<p align="center">
+  <img src="public/audio.png" alt="TronVid miniplayer" width="800">
+  <br>
+  <em>Audio Exctraction</em>
+</p>
+
+<p align="center">
+  <img src="public/video-stat-loop.png" alt="TronVid miniplayer" width="800">
+  <br>
+  <em>Video Statistics - Chapter Loop</em>
+</p>
+
+</details>
 
 ---
 
@@ -66,6 +81,7 @@
 
 ### Advanced Features
 - 📸 **Screenshot Capture** - Save screenshots as PNG files
+- 🎵 **Audio Extraction** - Extract audio as MP3, AAC, WAV, or FLAC
 - 🖼️ **Picture-in-Picture** - Watch videos in a floating window
 - 📺 **Video Previews** - Thumbnail strip for quick navigation
 - 📊 **Video Statistics** - View resolution, bitrate, codec info
@@ -166,6 +182,17 @@ Screenshots are saved as PNG files in a dedicated folder inside your Pictures di
 | Windows | `%USERPROFILE%/Pictures/TronVid Screenshots/` |
 | Linux | `~/Pictures/TronVid Screenshots/` |
 
+### Audio Extraction
+
+Audio files are saved as mp3, aac, wav or flac files in a dedicated folder inside your music directory:
+
+| Platform | Location |
+|----------|----------|
+| macOS | `~/Music/TronVid Audio/` |
+| Windows | `%USERPROFILE%/Music/TronVid Audio/` |
+| Linux | `~/Music/TronVid Audio/` |
+
+
 ### A-B Loop
 
 Repeat a specific section of the video:
@@ -238,6 +265,7 @@ Press `T` to cycle through 5 color themes:
 | Shortcut | Action |
 |----------|--------|
 | `S` | Take screenshot |
+| `E` | Extract audio |
 
 ## 📄 License
 
