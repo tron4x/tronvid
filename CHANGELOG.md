@@ -5,7 +5,20 @@ All notable changes to TronVid will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.7.2] - 2026-01-31
+
+### Added
+- **🎵 Audio Extraction** - Extract audio from videos as MP3, AAC, WAV, or FLAC
+  - Choose from 4 audio formats with quality options (Normal, Good, Best)
+  - Extract only A-B Loop section for precise clips
+  - Saves to `~/Music/TronVid Audio/` folder
+  - Press `E` to open the Audio Extract modal
+  - Requires FFmpeg installed on system
+
+### Technical
+- New `extract-audio` IPC handler using FFmpeg
+- FFmpeg auto-detection for macOS, Windows, and Linux
+- Quality presets for each audio format
 
 ## [1.7.1] - 2026-01-30
 
