@@ -56,6 +56,8 @@
 
 </details>
 
+---
+
 ## ✨ Features
 
 ### Core Features
