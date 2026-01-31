@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tron4x/tronvid/releases"><img src="https://img.shields.io/badge/version-1.7.2-orange" alt="Version"></a>
+  <a href="https://github.com/tron4x/tronvid/releases"><img src="https://img.shields.io/badge/version-1.7.4-orange" alt="Version"></a>
   <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" alt="License"></a>
   <img src="https://img.shields.io/badge/electron-40.0.0-9feaf9" alt="Electron">
@@ -80,6 +80,11 @@
 - 🔐 **Secure IPC** - Whitelist-based IPC communication
 
 ### Advanced Features
+- 🎬 **Video Editor** - Cut and merge video clips with FFmpeg
+  - Set precise IN/OUT markers on timeline
+  - Create clips from multiple videos
+  - Drag & drop reorder clips
+  - Export as MP4, WebM, or MOV
 - 📸 **Screenshot Capture** - Save screenshots as PNG files
 - 🎵 **Audio Extraction** - Extract audio as MP3, AAC, WAV, or FLAC
 - 🖼️ **Picture-in-Picture** - Watch videos in a floating window
