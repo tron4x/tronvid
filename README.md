@@ -88,8 +88,6 @@ Download the latest release for your platform from the [Releases](https://github
 |----------|----------|
 | macOS (Apple Silicon) | `TronVid-x.x.x-arm64.dmg` |
 | Windows (64-bit) | `TronVid-x.x.x-win-x64.exe` |
-| Windows (32-bit) | `TronVid-x.x.x-win-ia32.exe` |
-| Linux (AppImage) | `TronVid-x.x.x-linux-x86_64.AppImage` |
 | Linux (Debian) | `TronVid-x.x.x-linux-amd64.deb` |
 
 ---
