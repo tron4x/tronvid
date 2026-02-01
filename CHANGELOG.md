@@ -5,6 +5,40 @@ All notable changes to TronVid will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.4] - 2026-01-31
+
+### Added
+- **🎬 Video Editor** - Full video editing capabilities
+  - Cut video clips with precise IN/OUT markers
+  - Create clips from multiple videos
+  - Drag & drop to reorder clips in timeline
+  - Preview clips before export
+  - Export merged clips as single video (MP4, WebM, MOV)
+  - FFmpeg `filter_complex concat` for reliable merging
+  - Frame-accurate trimming with scale/pad normalization
+  - Real-time export progress indicator
+  - Access all saved playlists from within editor
+
+### Improved
+- **Memory Management** - Comprehensive cleanup on window close
+  - Video player resources released on editor close
+  - Thumbnail cache properly cleared
+  - All image elements explicitly freed
+  - Temp files deleted on app exit
+- **Performance** - Optimized for lower CPU/memory usage
+  - No memory leaks from thumbnails
+  - Clean temp directory handling
+  - Proper DOM cleanup on playlist clear
+
+### Fixed
+- Timeline "Play All" and "Clear" buttons now properly aligned side by side
+
+### Technical
+- New `videoEditor.js` module for clip management
+- `filter_complex` with `trim`, `setpts`, `scale`, `concat` filters
+- App cleanup handlers for `will-quit` and `before-quit` events
+- Automatic `tronvid_export_*` temp folder cleanup
+
 ## [1.7.2] - 2026-01-31
 
 ### Added
