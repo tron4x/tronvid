@@ -54,6 +54,18 @@
   <em>Video Statistics - Chapter Loop</em>
 </p>
 
+<p align="center">
+  <img src="public/editor.png" alt="TronVid miniplayer" width="800">
+  <br>
+  <em>Video Editor</em>
+</p>
+
+<p align="center">
+  <img src="public/export.png" alt="TronVid miniplayer" width="800">
+  <br>
+  <em>Video Editor - Export</em>
+</p>
+
 </details>
 
 ---
