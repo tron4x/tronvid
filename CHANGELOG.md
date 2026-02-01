@@ -5,6 +5,19 @@ All notable changes to TronVid will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.5] - 2026-01-02
+
+### Fixed
+- **Video Editor Export** - Fixed FFmpeg error code 254 when exporting videos
+  - Videos without audio streams now export correctly (silent audio generated when needed)
+  - URL-encoded file paths now properly decoded (handles spaces and special characters in filenames)
+  - Better error reporting with FFmpeg stderr output for debugging
+
+### Technical
+- Added FFprobe audio stream detection before export
+- Added `decodeURIComponent()` for file paths from video player source
+- Improved filter_complex handling for mixed audio/video-only clips
+
 ## [1.7.4] - 2026-01-31
 
 ### Added
