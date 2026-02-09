@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Controls condensed into single rows
   - Reduced padding and font sizes
   - Timeline toolbar with zoom controls
+
+![New Editor](public/new-editor.png)
 - **Updated Help Modals** - All shortcuts in English
   - Video Player help with all features
   - Video Editor help with correct JKL shortcuts
