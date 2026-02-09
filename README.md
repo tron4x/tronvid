@@ -86,7 +86,7 @@
 - **Enter key** to add clip, **/ key** to play selection
 - **Compact layout** with more screen space for video preview
 
-### 🛠️ Bug Fixes
+### 🐛 Bug Fixes
 - Fixed memory leaks in thumbnail cache
 - Proper cleanup on editor close
 - Fixed mouse offset in timeline when scrolled
