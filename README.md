@@ -70,6 +70,31 @@
 
 ---
 
+## 🆕 What's New in v1.7.7
+
+### 🔍 Video Zoom
+- **Mouse wheel zoom** directly on video (1x-5x magnification)
+- **Zoom buttons** (+/-/Reset) in control bar
+- **Pan zoomed video** by click-and-drag
+- **Zoom level indicator** shows current magnification
+
+### 🎬 Enhanced Video Editor
+- **Final Cut Pro style trimming** with I/O keys for IN/OUT points
+- **JKL navigation** (J=Rewind, K=Pause, L=Forward)
+- **Frame-by-frame navigation** with ← → keys (Shift+← → for 10-frame jumps)
+- **Draggable IN/OUT markers** on timeline with visual selection region
+- **Enter key** to add clip, **/ key** to play selection
+- **Compact layout** with more screen space for video preview
+
+### 🛠️ Bug Fixes
+- Fixed memory leaks in thumbnail cache
+- Proper cleanup on editor close
+- Fixed mouse offset in timeline when scrolled
+
+> 📋 See [CHANGELOG.md](CHANGELOG.md) for full version history
+
+---
+
 ## ✨ Features
 
 ### Core Features
