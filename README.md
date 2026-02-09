@@ -1,11 +1,11 @@
 # 🎬 TronVid
 
 <p align="center">
-  <img src="assets/logo.png" alt="TronVid Logo" width="128" height="128">
+  <img src="assets/logo2.png" alt="TronVid Logo" width="128" height="128">
 </p>
 
 <p align="center">
-  <strong>A modern, cross-platform video player with playlist support</strong>
+  <strong>A modern, cross-platform video player</strong>
 </p>
 
 <p align="center">
@@ -19,10 +19,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tron4x/tronvid/releases"><img src="https://img.shields.io/badge/version-1.7.5-orange" alt="Version"></a>
+  <a href="https://github.com/tron4x/tronvid/releases"><img src="https://img.shields.io/badge/version-1.7.7-orange" alt="Version"></a>
   <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" alt="License"></a>
-  <img src="https://img.shields.io/badge/electron-40.1.0-9feaf9" alt="Electron">
+  <img src="https://img.shields.io/badge/electron-40.2.1-9feaf9" alt="Electron">
   <img src="https://img.shields.io/badge/node-%3E%3Dv25.5.0-brightgreen" alt="Node">
   <a href="https://github.com/tron4x/tronvid/issues"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs Welcome"></a>
 </p>
@@ -92,10 +92,15 @@
 - 🔐 **Secure IPC** - Whitelist-based IPC communication
 
 ### Advanced Features
+- 🔍 **Video Zoom** - Zoom into video preview (1x-5x magnification)
+  - Mouse wheel zoom directly on video
+  - Pan zoomed video by click-and-drag
+  - Reset with zoom button
 - 🎬 **Video Editor** - Cut and merge video clips with FFmpeg
-  - Set precise IN/OUT markers on timeline
+  - Final Cut Pro style trimming (I/O keys, JKL navigation)
+  - Frame-by-frame navigation with arrow keys
+  - Draggable IN/OUT markers on timeline
   - Create clips from multiple videos
-  - Drag & drop reorder clips
   - Export as MP4, WebM, or MOV
 - 📸 **Screenshot Capture** - Save screenshots as PNG files
 - 🎵 **Audio Extraction** - Extract audio as MP3, AAC, WAV, or FLAC
@@ -150,8 +155,19 @@ Download the latest release for your platform from the [Releases](https://github
 
 ---
 
+## 🚀 Quick Start
 
-## 🚀 Usage
+**3 simple steps:**
+
+1. **Download** - Get TronVid for your system from [Releases](https://github.com/tron4x/tronvid/releases)
+2. **Install** - Open the downloaded file and follow the instructions
+3. **Play videos** - Drag & Drop videos into the app or click "Files"
+
+> 💡 **Tip:** Press `H` for all keyboard shortcuts!
+
+---
+
+## 📖 Usage
 
 ### Adding Videos
 

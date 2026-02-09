@@ -5,6 +5,37 @@ All notable changes to TronVid will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.7] - 2026-02-09
+
+### Added
+- **🔍 Video Zoom** - Zoom into video preview (1x-5x magnification)
+  - Mouse wheel zoom directly on video (no modifier key needed)
+  - Zoom buttons (+/-/Reset) in control bar
+  - Pan zoomed video by click-and-drag
+  - Zoom level indicator
+
+### Improved
+- **Final Cut Pro Style Trimming**
+  - I/O keys for IN/OUT points
+  - JKL navigation (J=Rewind, K=Pause, L=Forward)
+  - Frame-by-frame navigation with ← → keys
+  - Shift+← → for 10-frame jumps
+  - Draggable IN/OUT markers on timeline
+  - Visual selection region with handles
+  - Enter key to add clip to timeline
+  - / key to play selection
+- **Compact Editor Layout** - More screen space for video preview
+  - Controls condensed into single rows
+  - Reduced padding and font sizes
+  - Timeline toolbar with zoom controls
+- **Updated Help Modals** - All shortcuts in English
+  - Video Player help with all features
+  - Video Editor help with correct JKL shortcuts
+
+### Fixed
+- Memory leaks in thumbnail cache
+- Proper cleanup on editor close
+
 ## [1.7.5] - 2026-01-02
 
 ### Fixed
