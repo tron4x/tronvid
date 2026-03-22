@@ -5,6 +5,65 @@ All notable changes to TronVid will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1] - 2026-02-28
+
+### Added
+- **📋 Auto-Clipboard Detection** - Automatically detects video URLs when you copy them
+  - TronVid comes to foreground when a video URL is copied
+  - Large popup shows video icon, **title** (auto-fetched), and URL
+  - One-click "Add to Playlist" with pulsing green button
+  - Supports YouTube, Vimeo, Twitch, Dailymotion, HLS streams
+  - No browser extension needed!
+
+- **🌐 Browser Extension** - Optional Chrome/Firefox extension
+  - Floating "Add to TronVid" button on video pages
+  - Opens TronVid via `tronvid://` URL protocol
+  - Supports all major browsers (Chrome, Edge, Brave, Firefox)
+  - Located in `/browser-extension/` folder
+
+### Features
+- **Auto Video Title Fetching** - Video titles are automatically retrieved from YouTube/Vimeo/Twitch/Dailymotion
+- **Always-on-Top Window** - Window stays visible for 3 seconds when URL detected
+- **macOS Dock Bounce** - Critical bounce to get attention
+- **Stream Persistence** - Saved playlists now properly recognize stream URLs when reloaded
+- **isStreamUrl() / detectStreamType()** - Helper functions to identify streams from URLs
+
+### Technical
+- Clipboard monitoring every 1.5 seconds in main process
+- `tronvid://add-stream?url=...&name=...` URL protocol handler
+- `add-stream-from-browser` IPC event for browser extension
+- `clipboard-video-detected` IPC event for in-app notifications
+- New `window.addStreamToPlaylist()` global function
+
+---
+
+## [1.8.0] - 2026-02-28
+
+### Added
+- **📡 Multi-Platform Streaming** - Stream videos directly from popular platforms
+  - **YouTube** - Full support with quality selection (360p to 4K)
+  - **Vimeo** - Watch Vimeo videos directly in TronVid
+  - **Dailymotion** - Stream Dailymotion content
+  - **Twitch** - Watch VODs and clips
+  - **YouTube Playlists** - Import entire playlists as saved playlists
+  - **HLS Streams** - Play .m3u8 live streams
+  - **Direct URLs** - Play MP4/WebM URLs directly
+
+### Features
+- **Quality Selection** - Choose video quality before playback (YouTube)
+- **Auto Platform Detection** - URLs are automatically recognized
+- **No External Tools Required** - All streaming libraries are integrated:
+  - `@distube/ytdl-core` for YouTube
+  - `@distube/ytpl` for YouTube playlists
+  - `youtube-dl-exec` for Vimeo/Dailymotion/Twitch (auto-downloads yt-dlp binary)
+- **Demo Streams** - Load sample HLS streams to test streaming functionality
+
+### Technical
+- New `streamPlayer.js` module for all streaming functionality
+- HLS.js integration for adaptive streaming
+- Integrated IPC handlers for secure stream URL fetching
+- Platform-specific emoji indicators (🔴 YouTube, 🔵 Vimeo, 🟢 Dailymotion, 🟣 Twitch)
+
 ## [1.7.7] - 2026-02-09
 
 ### Added

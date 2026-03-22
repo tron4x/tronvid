@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tron4x/tronvid/releases"><img src="https://img.shields.io/badge/version-1.7.7-orange" alt="Version"></a>
+  <a href="https://github.com/tron4x/tronvid/releases"><img src="https://img.shields.io/badge/version-1.8.1-orange" alt="Version"></a>
   <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" alt="License"></a>
   <img src="https://img.shields.io/badge/electron-40.2.1-9feaf9" alt="Electron">
@@ -70,26 +70,52 @@
 
 ---
 
-## 🆕 What's New in v1.7.7
+## 🆕 What's New in v1.8.1
 
-### 🔍 Video Zoom
-- **Mouse wheel zoom** directly on video (1x-5x magnification)
-- **Zoom buttons** (+/-/Reset) in control bar
-- **Pan zoomed video** by click-and-drag
-- **Zoom level indicator** shows current magnification
+### 📋 Auto-Clipboard Detection
+**Copy a video URL → TronVid pops up!** No browser extension needed.
 
-### 🎬 Enhanced Video Editor
-- **Final Cut Pro style trimming** with I/O keys for IN/OUT points
-- **JKL navigation** (J=Rewind, K=Pause, L=Forward)
-- **Frame-by-frame navigation** with ← → keys (Shift+← → for 10-frame jumps)
-- **Draggable IN/OUT markers** on timeline with visual selection region
-- **Enter key** to add clip, **/ key** to play selection
-- **Compact layout** with more screen space for video preview
+| What Happens |
+|--------------|
+| 1. Copy any YouTube/Vimeo/Twitch/Dailymotion URL in your browser |
+| 2. TronVid comes to foreground automatically |
+| 3. Popup shows video icon, **title** (auto-fetched), and URL |
+| 4. Click "Add to Playlist" → Done! |
 
-### 🐛 Bug Fixes
-- Fixed memory leaks in thumbnail cache
-- Proper cleanup on editor close
-- Fixed mouse offset in timeline when scrolled
+### 🌐 Optional Browser Extension
+For those who prefer a button on video pages:
+- Chrome, Edge, Brave, Opera, Firefox supported
+- Floating "Add to TronVid" button on video pages
+- Install from `/browser-extension/` folder
+
+---
+
+## What's New in v1.8.0
+
+### 📡 Multi-Platform Streaming
+Stream videos directly from popular platforms - **no external tools required!**
+
+| Platform | Support |
+|----------|---------|
+| 🔴 **YouTube** | Videos, Shorts, and Playlists with quality selection (360p-4K) |
+| 🔵 **Vimeo** | Full video support |
+| 🟢 **Dailymotion** | Full video support |
+| 🟣 **Twitch** | VODs and Clips |
+| 📡 **HLS Streams** | Live streams (.m3u8) |
+| 🔗 **Direct URLs** | MP4, WebM, and more |
+
+### ✨ Streaming Features
+- **Quality Selection** - Choose video quality before playback (YouTube)
+- **Auto Platform Detection** - URLs are automatically recognized
+- **YouTube Playlist Import** - Import entire playlists as saved playlists
+- **Demo Streams** - Test HLS streaming with built-in demo streams
+- **Fully Integrated** - All streaming libraries are bundled (no installation needed)
+
+### 🛠️ Technical Details
+- `@distube/ytdl-core` for YouTube
+- `@distube/ytpl` for YouTube playlists  
+- `youtube-dl-exec` for Vimeo/Dailymotion/Twitch (auto-downloads yt-dlp binary)
+- HLS.js for adaptive streaming
 
 > 📋 See [CHANGELOG.md](CHANGELOG.md) for full version history
 
@@ -115,6 +141,14 @@
 - 🔒 **Context Isolation** - Secure renderer process with isolated context
 - 🛡️ **Content Security Policy** - Strict CSP prevents XSS attacks
 - 🔐 **Secure IPC** - Whitelist-based IPC communication
+
+### Streaming
+- 📡 **Multi-Platform Streaming** - Stream from YouTube, Vimeo, Dailymotion, Twitch
+  - No external tools required (all libraries integrated)
+  - Quality selection for YouTube (360p to 4K)
+  - Import YouTube playlists as saved playlists
+  - HLS live stream support (.m3u8)
+  - Direct URL playback (MP4, WebM)
 
 ### Advanced Features
 - 🔍 **Video Zoom** - Zoom into video preview (1x-5x magnification)
