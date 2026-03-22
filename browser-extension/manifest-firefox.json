@@ -1,0 +1,49 @@
+{
+  "manifest_version": 2,
+  "name": "TronVid - Add to Playlist",
+  "version": "1.0.0",
+  "description": "Add YouTube, Vimeo, Twitch, and Dailymotion videos directly to TronVid",
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "permissions": [
+    "activeTab",
+    "*://*.youtube.com/*",
+    "*://*.youtu.be/*",
+    "*://*.vimeo.com/*",
+    "*://*.twitch.tv/*",
+    "*://*.dailymotion.com/*",
+    "*://dai.ly/*"
+  ],
+  "browser_action": {
+    "default_icon": {
+      "48": "icon48.png",
+      "128": "icon128.png"
+    },
+    "default_title": "Add to TronVid"
+  },
+  "background": {
+    "scripts": ["background-firefox.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.youtu.be/*",
+        "*://*.vimeo.com/*",
+        "*://*.twitch.tv/*",
+        "*://*.dailymotion.com/*",
+        "*://dai.ly/*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "tronvid@tron4x.github.io",
+      "strict_min_version": "109.0"
+    }
+  }
+}

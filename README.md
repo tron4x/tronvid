@@ -19,10 +19,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tron4x/tronvid/releases"><img src="https://img.shields.io/badge/version-1.7.7-orange" alt="Version"></a>
+  <a href="https://github.com/tron4x/tronvid/releases"><img src="https://img.shields.io/badge/version-1.8.1-orange" alt="Version"></a>
   <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platform">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" alt="License"></a>
-  <img src="https://img.shields.io/badge/electron-40.2.1-9feaf9" alt="Electron">
+  <img src="https://img.shields.io/badge/electron-41.0.3-9feaf9" alt="Electron">
   <img src="https://img.shields.io/badge/node-%3E%3Dv25.5.0-brightgreen" alt="Node">
   <a href="https://github.com/tron4x/tronvid/issues"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs Welcome"></a>
 </p>
@@ -70,26 +70,50 @@
 
 ---
 
-## 🆕 What's New in v1.7.7
+## 🆕 What's New in v1.8.1
 
-### 🔍 Video Zoom
-- **Mouse wheel zoom** directly on video (1x-5x magnification)
-- **Zoom buttons** (+/-/Reset) in control bar
-- **Pan zoomed video** by click-and-drag
-- **Zoom level indicator** shows current magnification
+### 📋 Auto-Clipboard Detection
+**Copy a video URL → TronVid pops up!** No browser extension needed.
 
-### 🎬 Enhanced Video Editor
-- **Final Cut Pro style trimming** with I/O keys for IN/OUT points
-- **JKL navigation** (J=Rewind, K=Pause, L=Forward)
-- **Frame-by-frame navigation** with ← → keys (Shift+← → for 10-frame jumps)
-- **Draggable IN/OUT markers** on timeline with visual selection region
-- **Enter key** to add clip, **/ key** to play selection
-- **Compact layout** with more screen space for video preview
+| What Happens |
+|--------------|
+| 1. Copy any YouTube/Vimeo/Twitch/Dailymotion URL in your browser |
+| 2. TronVid comes to foreground automatically |
+| 3. Popup shows video icon, **title** (auto-fetched), and URL |
+| 4. Click "Add to Playlist" → Done! |
 
-### 🐛 Bug Fixes
-- Fixed memory leaks in thumbnail cache
-- Proper cleanup on editor close
-- Fixed mouse offset in timeline when scrolled
+### 🌐 Optional Browser Extension
+For those who prefer a button on video pages:
+- Chrome, Edge, Brave, Opera, Firefox supported
+- Floating "Add to TronVid" button on video pages
+- See [Browser Extension Installation](#-browser-extension) below
+
+---
+
+### 📡 Multi-Platform Streaming
+Stream videos directly from popular platforms - **no external tools required!**
+
+| Platform | Support |
+|----------|---------|
+| 🔴 **YouTube** | Videos, Shorts, and Playlists with quality selection (360p-4K) |
+| 🔵 **Vimeo** | Full video support |
+| 🟢 **Dailymotion** | Full video support |
+| 🟣 **Twitch** | VODs and Clips |
+| 📡 **HLS Streams** | Live streams (.m3u8) |
+| 🔗 **Direct URLs** | MP4, WebM, and more |
+
+### ✨ Streaming Features
+- **Quality Selection** - Choose video quality before playback (YouTube)
+- **Auto Platform Detection** - URLs are automatically recognized
+- **YouTube Playlist Import** - Import entire playlists as saved playlists
+- **Demo Streams** - Test HLS streaming with built-in demo streams
+- **Fully Integrated** - All streaming libraries are bundled (no installation needed)
+
+### 🛠️ Technical Details
+- `@distube/ytdl-core` for YouTube
+- `@distube/ytpl` for YouTube playlists  
+- `youtube-dl-exec` for Vimeo/Dailymotion/Twitch (auto-downloads yt-dlp binary)
+- HLS.js for adaptive streaming
 
 > 📋 See [CHANGELOG.md](CHANGELOG.md) for full version history
 
@@ -115,6 +139,14 @@
 - 🔒 **Context Isolation** - Secure renderer process with isolated context
 - 🛡️ **Content Security Policy** - Strict CSP prevents XSS attacks
 - 🔐 **Secure IPC** - Whitelist-based IPC communication
+
+### Streaming
+- 📡 **Multi-Platform Streaming** - Stream from YouTube, Vimeo, Dailymotion, Twitch
+  - No external tools required (all libraries integrated)
+  - Quality selection for YouTube (360p to 4K)
+  - Import YouTube playlists as saved playlists
+  - HLS live stream support (.m3u8)
+  - Direct URL playback (MP4, WebM)
 
 ### Advanced Features
 - 🔍 **Video Zoom** - Zoom into video preview (1x-5x magnification)
@@ -324,6 +356,79 @@ Press `T` to cycle through 5 color themes:
 |----------|--------|
 | `S` | Take screenshot |
 | `E` | Extract audio |
+
+## 🌐 Browser Extension
+
+Add videos from YouTube, Vimeo, Twitch, and Dailymotion directly to TronVid with one click!
+
+### Supported Browsers
+
+| Browser | Support | Manifest |
+|---------|---------|----------|
+| ✅ Chrome | Full | v3 |
+| ✅ Edge | Full | v3 |
+| ✅ Brave | Full | v3 |
+| ✅ Opera | Full | v3 |
+| ✅ Firefox | Full | v2 |
+| ❌ Safari | Not supported | - |
+
+### Installation Chrome / Edge / Brave / Opera
+
+1. Open your browser's extension page:
+   - **Chrome:** `chrome://extensions/`
+   - **Edge:** `edge://extensions/`
+   - **Brave:** `brave://extensions/`
+   - **Opera:** `opera://extensions/`
+2. Enable **"Developer mode"** (toggle in top-right corner)
+3. Click **"Load unpacked"**
+4. Navigate to the TronVid folder and select the `browser-extension` subfolder
+5. Done! The extension icon appears in your toolbar
+
+### Installation Firefox
+
+**Option 1: Temporary Install (for testing)**
+1. Open `about:debugging#/runtime/this-firefox`
+2. Click **"Load Temporary Add-on"**
+3. Navigate to the `browser-extension` folder
+4. Select `manifest-firefox.json`
+
+**Option 2: Permanent Install**
+1. In the `browser-extension` folder:
+   - Rename `manifest-firefox.json` → `manifest.json`
+   - Rename `background-firefox.js` → `background.js`
+2. Select all files in the folder and create a ZIP archive
+3. Open `about:addons` in Firefox
+4. Click the gear icon ⚙️ → **"Install Add-on From File"**
+5. Select the ZIP file you created
+
+### How to Use
+
+1. **Install TronVid** on your computer (run it at least once)
+2. **Install the browser extension** (see above)
+3. Navigate to a video page (YouTube, Vimeo, Twitch, or Dailymotion)
+4. A floating **"Add to TronVid"** button appears on the page
+5. Click the button → TronVid opens and adds the video to your playlist!
+
+### Supported Platforms
+
+| Platform | URL Patterns |
+|----------|-------------|
+| 🔴 YouTube | `youtube.com/watch`, `youtu.be/` |
+| 🔵 Vimeo | `vimeo.com/123456` |
+| 🟣 Twitch | `twitch.tv/videos/`, `clips.twitch.tv` |
+| 🟢 Dailymotion | `dailymotion.com/video/`, `dai.ly/` |
+
+### Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| Extension not working | Make sure TronVid is installed and has been run at least once |
+| Button doesn't appear | Reload the page or reinstall the extension |
+| TronVid doesn't open | Run TronVid once to register the URL protocol |
+
+> 💡 **Note:** The extension uses the `tronvid://` URL protocol to communicate with the app. This protocol is registered automatically when TronVid is installed.
+
+---
 
 ## 📄 License
 

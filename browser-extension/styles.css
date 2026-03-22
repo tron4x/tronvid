@@ -1,0 +1,110 @@
+/* TronVid Browser Extension Styles */
+
+#tronvid-add-button {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 999999;
+  background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+  color: white;
+  border-radius: 50px;
+  padding: 12px 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
+  transition: all 0.3s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+#tronvid-add-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 30px rgba(0, 212, 255, 0.6);
+}
+
+#tronvid-add-button:active {
+  transform: scale(0.98);
+}
+
+.tronvid-button-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tronvid-button-content svg {
+  flex-shrink: 0;
+}
+
+/* Platform-specific colors */
+#tronvid-add-button[data-platform="youtube"] {
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+  box-shadow: 0 4px 20px rgba(255, 0, 0, 0.4);
+}
+
+#tronvid-add-button[data-platform="youtube"]:hover {
+  box-shadow: 0 6px 30px rgba(255, 0, 0, 0.6);
+}
+
+#tronvid-add-button[data-platform="vimeo"] {
+  background: linear-gradient(135deg, #1ab7ea 0%, #0099cc 100%);
+  box-shadow: 0 4px 20px rgba(26, 183, 234, 0.4);
+}
+
+#tronvid-add-button[data-platform="vimeo"]:hover {
+  box-shadow: 0 6px 30px rgba(26, 183, 234, 0.6);
+}
+
+#tronvid-add-button[data-platform="twitch"] {
+  background: linear-gradient(135deg, #9146ff 0%, #6441a5 100%);
+  box-shadow: 0 4px 20px rgba(145, 70, 255, 0.4);
+}
+
+#tronvid-add-button[data-platform="twitch"]:hover {
+  box-shadow: 0 6px 30px rgba(145, 70, 255, 0.6);
+}
+
+#tronvid-add-button[data-platform="dailymotion"] {
+  background: linear-gradient(135deg, #00d2f3 0%, #00a8cc 100%);
+  box-shadow: 0 4px 20px rgba(0, 210, 243, 0.4);
+}
+
+#tronvid-add-button[data-platform="dailymotion"]:hover {
+  box-shadow: 0 6px 30px rgba(0, 210, 243, 0.6);
+}
+
+/* Notification */
+.tronvid-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999999;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.3s ease;
+  max-width: 400px;
+}
+
+.tronvid-notification-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tronvid-notification-success {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #00d4ff;
+  border: 1px solid #00d4ff;
+  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+}
+
+.tronvid-notification-error {
+  background: linear-gradient(135deg, #2e1a1a 0%, #3e1616 100%);
+  color: #ff4444;
+  border: 1px solid #ff4444;
+  box-shadow: 0 4px 20px rgba(255, 68, 68, 0.3);
+}
